@@ -107,6 +107,8 @@ public class TableWindow1 extends JPanel {
                         Mainframe.companyIndex = modelRow;
                         statusText.setText(String.format(" Company selected: %s   Selected Row in model: %d.",
                                 maindriver.Company11.get(modelRow).getCompanyName(), modelRow));
+                        // Update current company field in DetailsPanel
+                        DetailsPanel.currentCompanyField.setText(maindriver.Company11.get(modelRow).getCompanyName());
                         // Filter items by companyId
                         int selectedCompanyId = maindriver.Company11.get(modelRow).getCompanyId();
                         ArrayList<Item> filteredItems = new ArrayList<>();
@@ -255,6 +257,7 @@ public class TableWindow1 extends JPanel {
                                          DetailsPanel.supplierField.setText(currentHistoryPointer.get(0).getSupplier());
                                          DetailsPanel.reportDeliveryFrom.setText(currentHistoryPointer.get(0).getDeliveryDate());
                                          DetailsPanel.reportDeliveryTo.setText(currentHistoryPointer.get(0).getDeliveryDate());
+                                         DetailsPanel.notesArea.setText(currentHistoryPointer.get(0).getNotes());
                                      }
                                          // If no history, fill with item info
                                          Item selectedItem = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex);

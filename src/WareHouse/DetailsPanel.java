@@ -1,6 +1,7 @@
 
 package WareHouse;
 import javax.swing.BoxLayout;
+import javax.swing.Box;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -28,7 +29,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JTextArea;
 import javax.swing.event.EventListenerList;
+import javax.swing.JSeparator;
 import javax.swing.BoxLayout;
 
 //import com.mysql.jdbc.Connection;
@@ -97,6 +100,7 @@ public class DetailsPanel extends JPanel {
         static JTextField supplierField = new JTextField("Supplier", 10);
         static JTextField deliveryField = new JTextField("Delivery", 10);
         static JTextField amountField = new JTextField("Amount", 10);
+        static JTextArea notesArea = new JTextArea(5, 20); // 5 rows, 20 columns
 
     static JTextField reportDeliveryFrom = new JTextField(8);
     static JTextField reportDeliveryTo = new JTextField(8);
@@ -141,6 +145,7 @@ public class DetailsPanel extends JPanel {
                 locationField.setMaximumSize(fieldDim);
                 deliveryField.setMaximumSize(fieldDim);
                 amountField.setMaximumSize(fieldDim);
+                // notesField removed, notesArea used instead
                 currentCompanyField.setMaximumSize(fieldDim);
             // Set a fixed preferred size for the panel (adjust as needed)
             setPreferredSize(new Dimension(500, 350));
@@ -154,14 +159,20 @@ public class DetailsPanel extends JPanel {
         currentCompanyField.setEditable(false);
         currentCompanyField.setBackground(new Color(240,240,240));
 
-        // Helper to create a row panel for label/field (absolutely only two components per row)
+        // Helper to create a row panel for label/field (exactly two components per row, each half width)
         int rowHeight = 28;
+        int panelWidth = 500; // Should match DetailsPanel preferred width
+        int halfWidth = panelWidth / 2;
         java.util.function.BiFunction<JLabel, JTextField, JPanel> row = (label, field) -> {
             JPanel p = new JPanel(new java.awt.GridLayout(1, 2));
-            label.setPreferredSize(new Dimension(1, rowHeight));
-            field.setPreferredSize(new Dimension(1, rowHeight));
+            label.setPreferredSize(new Dimension(halfWidth, rowHeight));
+            label.setMaximumSize(new Dimension(halfWidth, rowHeight));
+            field.setPreferredSize(new Dimension(halfWidth, rowHeight));
+            field.setMaximumSize(new Dimension(halfWidth, rowHeight));
             p.add(label);
             p.add(field);
+            p.setMaximumSize(new Dimension(panelWidth, rowHeight));
+            p.setPreferredSize(new Dimension(panelWidth, rowHeight));
             return p;
         };
 
@@ -172,6 +183,25 @@ public class DetailsPanel extends JPanel {
         add(row.apply(locationLabel, locationField));
         add(row.apply(deliveryLabel, deliveryField));
         add(row.apply(quantityLabel, amountField));
+        // Add Notes label and area on the same horizontal line
+        JLabel notesLabel = new JLabel("Notes:");
+        notesArea.setLineWrap(true);
+        notesArea.setWrapStyleWord(true);
+        notesArea.setMaximumSize(new Dimension(halfWidth, rowHeight * 3));
+        JPanel notesRow = new JPanel(new java.awt.GridLayout(1, 2));
+        notesLabel.setPreferredSize(new Dimension(halfWidth, rowHeight * 3));
+        notesLabel.setMaximumSize(new Dimension(halfWidth, rowHeight * 3));
+        notesRow.add(notesLabel);
+        notesRow.add(notesArea);
+        notesRow.setMaximumSize(new Dimension(panelWidth, rowHeight * 3));
+        notesRow.setPreferredSize(new Dimension(panelWidth, rowHeight * 3));
+        add(notesRow);
+
+        add(Box.createRigidArea(new Dimension(0, 16))); // ~2 blank lines
+
+        JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
+        separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 2));
+        add(separator);
 
         // Panel for Add/Update/Remove buttons
         JPanel buttonPanel = new JPanel();
@@ -180,12 +210,22 @@ public class DetailsPanel extends JPanel {
         buttonPanel.add(updateBtn);
         buttonPanel.add(removeBtn);
         add(buttonPanel);
+        // Add a horizontal separator below the buttons
+        add(Box.createRigidArea(new Dimension(0, 16))); // ~2 blank lines
+        separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 2));
+        add(separator);
 
+        add(Box.createRigidArea(new Dimension(0, 16))); // ~2 blank lines
+        // Add vertical space after separator
+        add(Box.createRigidArea(new Dimension(0, 16))); // ~2 blank lines
         // Status label
         JPanel statusPanel = new JPanel();
         statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
         statusPanel.add(statusLabel);
         add(statusPanel);
+
+         add(Box.createRigidArea(new Dimension(0, 16))); // ~2 blank lines
+        // Add vertical space after separator
 
         // Panel for extra buttons
         JPanel extraButtonPanel = new JPanel();

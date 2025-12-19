@@ -26,15 +26,17 @@ public final class Databases {
         hist.setSupplier(supplier);
         hist.setDeliveryDate(delivery);
         hist.setAmount(quantity);
+        // Optionally set notes if provided (add parameter if needed)
 
         // Update database
-        String query = "UPDATE history SET location = ?, supplier = ?, delivery_date = ?, amount = ? WHERE history_id = ?";
+        String query = "UPDATE history SET location = ?, supplier = ?, delivery_date = ?, amount = ?, notes = ? WHERE history_id = ?";
         PreparedStatement stmt = con.prepareStatement(query);
         stmt.setString(1, location);
         stmt.setString(2, supplier);
         stmt.setString(3, delivery);
         stmt.setInt(4, quantity);
-        stmt.setInt(5, hist.getHistoryId());
+        stmt.setString(5, hist.getNotes());
+        stmt.setInt(6, hist.getHistoryId());
         stmt.executeUpdate();
     }
 
@@ -75,6 +77,8 @@ public final class Databases {
                 int companyId = itemsResult.getInt(2);
                 int quantity = itemsResult.getInt(3);
                 String itemName = itemsResult.getString(4);
+                String itemNotes = null;
+                try { itemNotes = itemsResult.getString("notes"); } catch (Exception e) { itemNotes = null; }
 
                 // Load history for this item
                 ArrayList<history> historyList = new ArrayList<>();
@@ -87,9 +91,11 @@ public final class Databases {
                     String location = histResult.getString(4);
                     String provider = histResult.getString(5);
                     String deliveryDate = histResult.getString(6);
-                    historyList.add(new history(historyId, itemId, amount, location, provider, deliveryDate));
+                    String historyNotes = null;
+                    try { historyNotes = histResult.getString("notes"); } catch (Exception e) { historyNotes = null; }
+                    historyList.add(new history(historyId, itemId, amount, location, provider, deliveryDate, historyNotes));
                 }
-                items.add(new Item(itemId, companyId, quantity, itemName, historyList));
+                items.add(new Item(itemId, companyId, quantity, itemName, itemNotes, historyList));
             }
 
             // Load users
@@ -130,9 +136,20 @@ public final class Databases {
             PreparedStatement statement = (PreparedStatement) con.prepareStatement("SELECT * from ITEM");
             ResultSet itemsResult = statement.executeQuery();
             java.util.Random rand = new java.util.Random();
-            String[] locations = {"Cork", "Dublin", "Mayo", "Limerick", "Galway", "Waterford"};
-            String[] providers = {"ProviderA", "ProviderB", "ProviderC", "ProviderD"};
-            String[] datePool = {"2025-01-15", "2025-02-20", "2025-03-10", "2025-04-05", "2025-05-12", "2025-06-18", "2025-07-22", "2025-08-30"};
+            // Gardening-themed locations, providers, and notes
+            String[] locations = {"Greenhouse", "Garden Shed", "Nursery", "Compost Area", "Tool Shed", "Flower Bed"};
+            String[] providers = {"GardenWorld", "PlantDepot", "SeedMasters", "ToolTown"};
+            String[] datePool = {"2025-03-15", "2025-04-10", "2025-05-05", "2025-06-01", "2025-07-12", "2025-08-18", "2025-09-22", "2025-10-30"};
+            String[] gardeningNotes = {
+                "Planted in spring for best results",
+                "Keep soil moist and well-drained",
+                "Fertilize every two weeks",
+                "Store in a cool, dry place",
+                "Prune regularly to encourage growth",
+                "Harvest before first frost",
+                "Check for pests weekly",
+                "Water early in the morning"
+            };
 
             int historyIdCounter = 1000000;
             while (itemsResult.next()) {
@@ -140,6 +157,8 @@ public final class Databases {
                 int companyId = itemsResult.getInt(2);
                 int quantity = itemsResult.getInt(3);
                 String itemName = itemsResult.getString(4);
+                String itemNotes = null;
+                try { itemNotes = itemsResult.getString("notes"); } catch (Exception e) { itemNotes = null; }
                 History = new ArrayList<history>();
 
                 // 3. Generate a random number of history records for each item
@@ -150,10 +169,11 @@ public final class Databases {
                     String location = locations[rand.nextInt(locations.length)];
                     String provider = providers[rand.nextInt(providers.length)];
                     String deliveryDate = datePool[rand.nextInt(datePool.length)];
+                    String historyNotes = gardeningNotes[rand.nextInt(gardeningNotes.length)];
 
                     // Insert into DB
                     PreparedStatement insertHistory = (PreparedStatement) con.prepareStatement(
-                        "INSERT INTO HISTORY (history_id, item_id, amount, location, provider, delivery_date) VALUES (?, ?, ?, ?, ?, ?)"
+                        "INSERT INTO HISTORY (history_id, item_id, amount, location, provider, delivery_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?)"
                     );
                     insertHistory.setInt(1, historyId);
                     insertHistory.setInt(2, itemId);
@@ -161,12 +181,13 @@ public final class Databases {
                     insertHistory.setString(4, location);
                     insertHistory.setString(5, provider);
                     insertHistory.setString(6, deliveryDate);
+                    insertHistory.setString(7, historyNotes);
                     insertHistory.executeUpdate();
 
                     // Add to in-memory model
-                    History.add(new history(historyId, itemId, amount, location, provider, deliveryDate));
+                    History.add(new history(historyId, itemId, amount, location, provider, deliveryDate, historyNotes));
                 }
-                Item.add(new Item(itemId, companyId, quantity, itemName, History));
+                Item.add(new Item(itemId, companyId, quantity, itemName, itemNotes, History));
             }
             // Create the users - only one
             PreparedStatement statement3 = (PreparedStatement) con.prepareStatement("select * from users ");
@@ -240,13 +261,13 @@ public final class Databases {
 
         try {
             PreparedStatement statement;
-                statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(ITEM_id,AMOUNT,LOCATION,Supplier,DELIVERY_DATE)  VALUES  (?,?,?,?,?)");
-            //String name = DetailsPanel.nameField.getText();
+            statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(ITEM_id,AMOUNT,LOCATION,Supplier,DELIVERY_DATE,notes)  VALUES  (?,?,?,?,?,?)");
             int temp = maindriver.Company.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemId();
             String location = DetailsPanel.locationField.getText();
             String supplier = DetailsPanel.supplierField.getText();
             String delivery = DetailsPanel.deliveryField.getText();
             String tempAmount = DetailsPanel.amountField.getText();
+            String notes = DetailsPanel.notesArea.getText();
 
             int Amount = Integer.parseInt(tempAmount);
 
@@ -255,6 +276,7 @@ public final class Databases {
             statement.setString(3, location);
             statement.setString(4, supplier);
             statement.setString(5, delivery);
+            statement.setString(6, notes);
             statement.executeUpdate();
             int total = maindriver.Company.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getQuantity();
             total = total + Amount;
@@ -268,22 +290,18 @@ public final class Databases {
     }
 
     public void insertNewItemTransintoDatabase(Connection con, ArrayList<Company> Company) throws SQLException {
-
         try {
-
-            PreparedStatement statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  item(company_id,quantity,itemName)  VALUES  (?,?,?)");
+            PreparedStatement statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  item(company_id,quantity,itemName,notes)  VALUES  (?,?,?,?)");
             int companyId = maindriver.Company.get(Mainframe.companyIndex).getCompanyId();
-
             String tempAmount = DetailsPanel.amountField.getText();
             int Amount = Integer.parseInt(tempAmount);
             String itemName = DetailsPanel.nameField.getText();
-
+            String notes = DetailsPanel.notesArea.getText();
             statement.setInt(1, companyId);
             statement.setInt(2, Amount);
             statement.setString(3, itemName);
+            statement.setString(4, notes);
             statement.executeUpdate();
-
-            // update Item Array
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -306,62 +324,56 @@ public final class Databases {
             e.printStackTrace();
         }
 
-        //Item(int itemId,int companyId,int quantity,String itemName,ArrayList<history> historyItem)
+        //Item(int itemId,int companyId,int quantity,String itemName,String notes,ArrayList<history> historyItem)
         // now to add the item to the items array
         int companyId = maindriver.Company.get(Mainframe.companyIndex).getCompanyId();
         String tempAmount = DetailsPanel.amountField.getText();
         int Amount = Integer.parseInt(tempAmount);
         String itemName = DetailsPanel.nameField.getText();
+        String notes = DetailsPanel.notesArea.getText();
         ArrayList<history> tempHistory = new ArrayList<history>();
-
-            Item tempItem = new Item(item_id, companyId, Amount, itemName, tempHistory);
+        Item tempItem = new Item(item_id, companyId, Amount, itemName, notes, tempHistory);
         ArrayList<Item> currentItemPointer = maindriver.Company.get(Mainframe.companyIndex).getItems();
         currentItemPointer.add(tempItem);
         Mainframe.itemIndex = (Company.get(Mainframe.companyIndex).getItems().size());
 
         // Now to create entry in the history database
         try {
-            PreparedStatement statement;
-                statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(ITEM_id,AMOUNT,LOCATION,Supplier,DELIVERY_DATE)  VALUES  (?,?,?,?,?)");
-            //String name = DetailsPanel.nameField.getText();
-
+            PreparedStatement statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(ITEM_id,AMOUNT,LOCATION,Supplier,DELIVERY_DATE,notes)  VALUES  (?,?,?,?,?,?)");
             int temp = item_id;
             String location = DetailsPanel.locationField.getText();
             String supplier = DetailsPanel.supplierField.getText();
             String delivery = DetailsPanel.deliveryField.getText();
             String tempAmount1 = DetailsPanel.amountField.getText();
+            String notes1 = DetailsPanel.notesArea.getText();
             int Amount1 = Integer.parseInt(tempAmount);
             System.out.println("5 total" + temp + location + supplier + delivery + tempAmount1);
-            //		 statement.setInt(1, maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemId());
             statement.setInt(1, item_id);
             statement.setInt(2, Amount);
             statement.setString(3, location);
             statement.setString(4, supplier);
             statement.setString(5, delivery);
+            statement.setString(6, notes1);
             statement.executeUpdate();
             // Now to retrieve the auto generated history_id
-
             int history_id = 0;
-            //	String query = "select * from history where history_id=last_insert_id()";
             String query = "select item_id from item order by item_id desc";
             PreparedStatement statement3 = (PreparedStatement) con.prepareStatement(query);
             ResultSet result3 = statement3.executeQuery();
-
             while (result3.next()) {
                 history_id = result3.getInt(1);
                 break;
             }
-
             // update history array
             int itemSize = maindriver.Company.get(Mainframe.companyIndex).getItems().size();
             ArrayList<history> currentItemHistoryPointer = maindriver.Company.get(Mainframe.companyIndex).getItems().get(itemSize - 1).getHistory();
-
-            /*	  currentItemHistoryPointer.get(0).getHistoryId();
-						  currentItemHistoryPointer.get(0).setItemId(item_id);
-						  currentItemHistoryPointer.get(0).setAmount(Amount);
+            /*      currentItemHistoryPointer.get(0).getHistoryId();
+                          currentItemHistoryPointer.get(0).setItemId(item_id);
+                          currentItemHistoryPointer.get(0).setAmount(Amount);
                           currentItemHistoryPointer.get(0).setLocation(location);
-						  currentItemHistoryPointer.get(0).setSupplier(supplier);
-						  currentItemHistoryPointer.get(0).setDeliveryDate(delivery);*/
+                          currentItemHistoryPointer.get(0).setSupplier(supplier);
+                          currentItemHistoryPointer.get(0).setDeliveryDate(delivery);
+                          currentItemHistoryPointer.get(0).setNotes(notes1);*/
         } catch (Exception e) {
             e.printStackTrace();
         }

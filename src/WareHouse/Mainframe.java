@@ -48,6 +48,25 @@ public class Mainframe extends JFrame {
 				} catch (Exception e) {}
 							   // detailPanel.updateTxCompanyName(companyName); // removed field
 			}
+			// Select first row in history table (detailTable2) on launch
+			javax.swing.SwingUtilities.invokeLater(() -> {
+				if (detailTable2 != null && TableWindow2.table3 != null && TableWindow2.table3.getRowCount() > 0) {
+					TableWindow2.table3.setRowSelectionInterval(0, 0);
+					// Update west panel controls for first history record
+					int modelRow = TableWindow2.table3.convertRowIndexToModel(0);
+					ArrayList<history> historyList = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
+					if (modelRow >= 0 && modelRow < historyList.size()) {
+						history firstHistory = historyList.get(modelRow);
+						// Also update item name field
+						String itemName = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemName();
+						DetailsPanel.nameField.setText(itemName);
+						DetailsPanel.locationField.setText(firstHistory.getLocation());
+						DetailsPanel.amountField.setText(String.valueOf(firstHistory.getAmount()));
+						DetailsPanel.supplierField.setText(firstHistory.getSupplier());
+						DetailsPanel.deliveryField.setText(firstHistory.getDeliveryDate());
+					}
+				}
+			});
 		}
 	private static final long serialVersionUID = 1L;
 
@@ -70,6 +89,7 @@ public class Mainframe extends JFrame {
 			super(title);
 			// Set initial frame size for proper split
 			setSize(1200, 700); // You can adjust this size as needed
+			setMinimumSize(new java.awt.Dimension(1200, 700));
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC","root","ROOT");
 
@@ -122,10 +142,11 @@ public class Mainframe extends JFrame {
 			       detailTable2.setPreferredSize(new java.awt.Dimension(300, 200));
 			       detailTable2.add(new javax.swing.JLabel("TableWindow2 (EAST)"));
 
-			       detailPanel.setOpaque(true);
-			       detailPanel.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.GREEN, 3));
-			       detailPanel.setPreferredSize(new java.awt.Dimension(300, 200));
-			       detailPanel.add(new javax.swing.JLabel("DetailsPanel (WEST top)"));
+				detailPanel.setOpaque(true);
+				detailPanel.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLUE, 3));
+				detailPanel.setBackground(new java.awt.Color(240, 240, 255));
+				detailPanel.setPreferredSize(new java.awt.Dimension(300, 200));
+				detailPanel.add(new javax.swing.JLabel("DetailsPanel (WEST top)"));
 			       detailPanel.addDetailListener(new DetailListener() {
 				       public void detailEventOccured(DetailEvent event) {
 					       String text = event.getText();
@@ -133,11 +154,10 @@ public class Mainframe extends JFrame {
 				       }
 			       });
 
-			// Populate DetailsPanel with first company, item, and history record
+			// Populate DetailsPanel and select first rows in tables on launch
 			if (!maindriver.Company11.isEmpty()) {
 				Company firstCompany = maindriver.Company11.get(0);
-							   // detailPanel.updateTxCompanyName(firstCompany.getCompanyName()); // removed field
-							   detailPanel.setCurrentCompanyField(firstCompany.getCompanyName());
+				detailPanel.setCurrentCompanyField(firstCompany.getCompanyName());
 				java.util.List<Item> items = firstCompany.getItems();
 				if (items != null && !items.isEmpty()) {
 					Item firstItem = items.get(0);
@@ -151,7 +171,6 @@ public class Mainframe extends JFrame {
 						int amount = firstHistory.getAmount();
 						detailPanel.setFields(itemName, location, supplier, delivery, String.valueOf(amount));
 					} else {
-						// No history, just fill item fields with item info
 						String supplier = "";
 						String location = "";
 						String delivery = "";
@@ -159,6 +178,22 @@ public class Mainframe extends JFrame {
 						detailPanel.setFields(itemName, location, supplier, delivery, String.valueOf(amount));
 					}
 				}
+				// Select first row in company table (detailTable1)
+				javax.swing.SwingUtilities.invokeLater(() -> {
+					if (detailTable1 != null && detailTable1.getComponentCount() > 0) {
+						for (java.awt.Component comp : detailTable1.getComponents()) {
+							if (comp instanceof javax.swing.JScrollPane) {
+								javax.swing.JScrollPane sp = (javax.swing.JScrollPane) comp;
+								if (sp.getViewport().getView() instanceof javax.swing.JTable) {
+									javax.swing.JTable t = (javax.swing.JTable) sp.getViewport().getView();
+									if (t.getRowCount() > 0) {
+										t.setRowSelectionInterval(0, 0);
+									}
+								}
+							}
+						}
+					}
+				});
 			}
 
 			// Create scroll pane for DetailsPanel (WEST)

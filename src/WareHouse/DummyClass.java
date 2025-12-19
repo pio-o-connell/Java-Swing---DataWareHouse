@@ -34,49 +34,49 @@ public class DummyClass
 		
 		//First Company Ericksson --------------------------------
 		
-		history11.add(new history(10008177, 33008177, 100, "Rough rider", "Toshiba",  sdf.format(new Date(53, 0, 16)) ));		
-		history11.add(new history(10008178, 33008177, 100, "Freler","Ericksson", sdf.format(new Date(53, 0, 16)) ));	
-		history11.add(new history(10008179, 33008177, 100, "Hells Angel", "Bosch", sdf.format(new Date(43, 0, 16)) ));		
-		history11.add(new history(10008180, 33008177, 100, "Ball", "Krupps", sdf.format(new Date(33, 0, 16)) ));
-		history11.add(new history(10008181, 33008177, 100, "Hells Angel", "Sony", sdf.format(new Date(23, 0, 16)) ));
-		history11.add(new history(10008182, 33008177, 100, "Chopper", "Sony", sdf.format(new Date(13, 0, 16)) ));
-		history11.add(new history(10008183, 33008177, 100, "Slingshot", "Amdahl", sdf.format(new Date(63, 0, 16)) ));		
-		history11.add(new history(10008184, 33008177, 100," Boss Hoss","Sony", sdf.format(new Date(64, 0, 16)) ));			 
-		history11.add(new history(10008185, 33008177, 100,"Cruiser", "Sony", sdf.format(new Date(65, 0, 16)) ));			
-		history11.add(new history(10008186, 33008177, 100, "Heley", "Hoover", sdf.format(new Date(66, 0, 16)) ));
-		history11.add(new history(10008187, 33008177, 100, "Free Loadr", "IBM", sdf.format(new Date(66, 0, 16)) ));
-		history11.add(new history(10008189, 33008177, 100, "Free Loadr", "IBM", sdf.format(new Date(66, 0, 16)) ));
-		Items11.add(new Item(33008177,44008177,1200,"Electric Gear",history11));
+				history11.add(new history(10008177, 33008177, 100, "Rough rider", "Toshiba",  sdf.format(new Date(53, 0, 16)), "" ));
+				history11.add(new history(10008178, 33008177, 100, "Freler","Ericksson", sdf.format(new Date(53, 0, 16)), "" ));
+		history11.add(new history(10008179, 33008177, 100, "Hells Angel", "Bosch", sdf.format(new Date(43, 0, 16)), "" ));
+		history11.add(new history(10008180, 33008177, 100, "Ball", "Krupps", sdf.format(new Date(33, 0, 16)), "" ));
+		history11.add(new history(10008181, 33008177, 100, "Hells Angel", "Sony", sdf.format(new Date(23, 0, 16)), "" ));
+		history11.add(new history(10008182, 33008177, 100, "Chopper", "Sony", sdf.format(new Date(13, 0, 16)), "" ));
+		history11.add(new history(10008183, 33008177, 100, "Slingshot", "Amdahl", sdf.format(new Date(63, 0, 16)), "" ));
+		history11.add(new history(10008184, 33008177, 100," Boss Hoss","Sony", sdf.format(new Date(64, 0, 16)), "" ));
+		history11.add(new history(10008185, 33008177, 100,"Cruiser", "Sony", sdf.format(new Date(65, 0, 16)), "" ));
+		history11.add(new history(10008186, 33008177, 100, "Heley", "Hoover", sdf.format(new Date(66, 0, 16)), "" ));
+		history11.add(new history(10008187, 33008177, 100, "Free Loadr", "IBM", sdf.format(new Date(66, 0, 16)), "" ));
+		history11.add(new history(10008189, 33008177, 100, "Free Loadr", "IBM", sdf.format(new Date(66, 0, 16)), "" ));
+				Items11.add(new Item(33008177,44008177,1200,"Electric Gear","",history11));
 		history11= new ArrayList<history>();
 		
 		history11 = new ArrayList<history>();
-		history11.add(new history(10008190, 33008178, 100, "HeAngel", "Sony", sdf.format(new Date(23, 0, 16)) ));
-		history11.add(new history(10008191, 33008178, 100, "Chopp", "Sony", sdf.format(new Date(13, 0, 16)) ));
-		history11.add(new history(10008192, 33008178, 100, "Slingshot", "Amdahl", sdf.format(new Date(63, 0, 16)) ));		
-		history11.add(new history(10008193, 33008178, 100," BosHoss","Sony", sdf.format(new Date(64, 0, 16)) ));			 
-		history11.add(new history(10008194, 33008178, 100,"Cruiser", "Sony", sdf.format(new Date(65, 0, 16)) ));			
-		history11.add(new history(10008195, 33008178, 100, "Heley", "Hoover", sdf.format(new Date(66, 0, 16)) ));
-		Items11.add(new Item(33008178,44008177,600,"Electric Motor",history11));
+		history11.add(new history(10008190, 33008178, 100, "HeAngel", "Sony", sdf.format(new Date(23, 0, 16)), "" ));
+		history11.add(new history(10008191, 33008178, 100, "Chopp", "Sony", sdf.format(new Date(13, 0, 16)), "" ));
+		history11.add(new history(10008192, 33008178, 100, "Slingshot", "Amdahl", sdf.format(new Date(63, 0, 16)), "" ));
+		history11.add(new history(10008193, 33008178, 100," BosHoss","Sony", sdf.format(new Date(64, 0, 16)), "" ));
+		history11.add(new history(10008194, 33008178, 100,"Cruiser", "Sony", sdf.format(new Date(65, 0, 16)), "" ));
+		history11.add(new history(10008195, 33008178, 100, "Heley", "Hoover", sdf.format(new Date(66, 0, 16)), "" ));
+		Items11.add(new Item(33008178,44008177,600,"Electric Motor","",history11));
 		history11= new ArrayList<history>();
 		
 		history11 = new ArrayList<history>();
-		history11.add(new history(10082000, 33008179, 100, "Hells Angel", "Sony", sdf.format(new Date(23, 0, 16)) ));
-		history11.add(new history(10082001, 33008179, 100, "row 3","Sony", sdf.format(new Date(13, 0, 16)) ));
-		history11.add(new history(10082002, 33008179, 100, "Slingshot", "Amdahl", sdf.format(new Date(63, 0, 16)) ));		
-		history11.add(new history(10082003, 33008179, 100," Bo Hoss","Sony", sdf.format(new Date(64, 0, 16)) ));			 
-		history11.add(new history(10082004, 33008179, 100,"Cruiser", "Sony", sdf.format(new Date(65, 0, 16)) ));			
-		history11.add(new history(10082005, 33008179, 100, "Heley", "Hoover", sdf.format(new Date(66, 0, 16)) ));
-		Items11.add(new Item(33008179,44008177,600,"Electric Engine",history11));
+		history11.add(new history(10082000, 33008179, 100, "Hells Angel", "Sony", sdf.format(new Date(23, 0, 16)), "" ));
+		history11.add(new history(10082001, 33008179, 100, "row 3","Sony", sdf.format(new Date(13, 0, 16)), "" ));
+		history11.add(new history(10082002, 33008179, 100, "Slingshot", "Amdahl", sdf.format(new Date(63, 0, 16)), "" ));
+		history11.add(new history(10082003, 33008179, 100," Bo Hoss","Sony", sdf.format(new Date(64, 0, 16)), "" ));
+		history11.add(new history(10082004, 33008179, 100,"Cruiser", "Sony", sdf.format(new Date(65, 0, 16)), "" ));
+		history11.add(new history(10082005, 33008179, 100, "Heley", "Hoover", sdf.format(new Date(66, 0, 16)), "" ));
+		Items11.add(new Item(33008179,44008177,600,"Electric Engine","",history11));
 		history11= new ArrayList<history>();
 		
 		history11 = new ArrayList<history>();
-		history11.add(new history(10082006, 33008180, 100, "row 1", "Sony", sdf.format(new Date(23, 0, 16)) ));
-		history11.add(new history(10082007, 33008180, 100, "Chopper", "Sony", sdf.format(new Date(13, 0, 16)) ));
-		history11.add(new history(10082008, 33008180, 100, "Slingshot", "Amdahl", sdf.format(new Date(63, 0, 16)) ));		
-		history11.add(new history(10082009, 33008180, 100," Boss Hoss","Sony", sdf.format(new Date(64, 0, 16)) ));			 
-		history11.add(new history(10082010, 33008180, 100,"Cruiser", "Sony", sdf.format(new Date(65, 0, 16)) ));			
-		history11.add(new history(10082011, 33008180, 100, "Heley", "Hoover", sdf.format(new Date(66, 0, 16)) ));
-		Items11.add(new Item(33008180,44008177,600,"Electric Gears",history11));
+		history11.add(new history(10082006, 33008180, 100, "row 1", "Sony", sdf.format(new Date(23, 0, 16)), "" ));
+		history11.add(new history(10082007, 33008180, 100, "Chopper", "Sony", sdf.format(new Date(13, 0, 16)), "" ));
+		history11.add(new history(10082008, 33008180, 100, "Slingshot", "Amdahl", sdf.format(new Date(63, 0, 16)), "" ));
+		history11.add(new history(10082009, 33008180, 100," Boss Hoss","Sony", sdf.format(new Date(64, 0, 16)), "" ));
+		history11.add(new history(10082010, 33008180, 100,"Cruiser", "Sony", sdf.format(new Date(65, 0, 16)), "" ));
+		history11.add(new history(10082011, 33008180, 100, "Heley", "Hoover", sdf.format(new Date(66, 0, 16)), "" ));
+		Items11.add(new Item(33008180,44008177,600,"Electric Gears","",history11));
 		history11=  new ArrayList<history>();
 		
 		

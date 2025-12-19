@@ -1,94 +1,21 @@
-DateFri Dec 19 21:19:29 GMT 2025
-Company Name: Kanturk-Services	Company Id: 44008177
+DateFri Dec 19 23:53:35 GMT 2025
+Company Name: Green Thumb Ltd	Company Id: 1001
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Lawn-Care-Small			 33008177			20
+Tomato Seeds			 3001			250
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Waterford			 1000000		72		  ProviderC		 2025-06-18
-			 Galway			 1000001		89		  ProviderD		 2025-06-18
-			 Mayo			 1000002		69		  ProviderC		 2025-04-05
-			 Cork			 1000003		88		  ProviderA		 2025-07-22
+			 Seed delivery			 4001		100		  WireMakers		 2025-03-10
+			 Planted in greenhouse			 4002		50		  Green Thumb Ltd		 2025-03-15
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Lawn-Care-Medium			 33008178			40
+Garden Shovel			 3002			100
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Limerick			 1000004		38		  ProviderC		 2025-05-12
-			 Limerick			 1000005		43		  ProviderA		 2025-02-20
-			 Limerick			 1000006		26		  ProviderC		 2025-08-30
-			 Limerick			 1000007		90		  ProviderA		 2025-02-20
+			 Tool shipment			 4003		40		  PipeWorks		 2025-04-01
+			 Issued to staff			 4004		10		  Green Thumb Ltd		 2025-04-05
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Lawn_Care-Large			 33008179			80
+Rose Bush			 3003			75
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Cork			 1000008		34		  ProviderD		 2025-08-30
-			 Galway			 1000009		20		  ProviderD		 2025-06-18
-			 Waterford			 1000010		52		  ProviderA		 2025-03-10
-			 Waterford			 1000011		75		  ProviderB		 2025-03-10
+			 Received from nursery			 4005		25		  WireMakers		 2025-05-10
+			 Planted in flower bed			 4006		10		  Green Thumb Ltd		 2025-05-12
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Hedging-Small			 33008180			20
+Compost Bag			 3004			40
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Galway			 1000012		25		  ProviderB		 2025-05-12
-			 Mayo			 1000013		83		  ProviderD		 2025-06-18
-			 Waterford			 1000014		20		  ProviderD		 2025-04-05
-			 Waterford			 1000015		72		  ProviderD		 2025-03-10
-			 Galway			 1000016		33		  ProviderD		 2025-05-12
-Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Hedging-Medium			 33008181			40
-			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Mayo			 1000017		95		  ProviderA		 2025-03-10
-			 Dublin			 1000018		68		  ProviderC		 2025-01-15
-			 Waterford			 1000019		81		  ProviderA		 2025-03-10
-			 Galway			 1000020		38		  ProviderC		 2025-08-30
-			 Galway			 1000021		56		  ProviderA		 2025-05-12
-Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Hedging-Large			 33008182			80
-			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Limerick			 1000022		30		  ProviderA		 2025-07-22
-			 Limerick			 1000023		34		  ProviderC		 2025-01-15
-			 Mayo			 1000024		87		  ProviderA		 2025-01-15
-			 Dublin			 1000025		86		  ProviderD		 2025-07-22
-			 Waterford			 1000026		68		  ProviderC		 2025-04-05
-DateFri Dec 19 21:19:29 GMT 2025
-Company Name: Mallow-Services	Company Id: 55008177
-Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Lawn-Care-Small			 33008177			20
-			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Waterford			 1000000		72		  ProviderC		 2025-06-18
-			 Galway			 1000001		89		  ProviderD		 2025-06-18
-			 Mayo			 1000002		69		  ProviderC		 2025-04-05
-			 Cork			 1000003		88		  ProviderA		 2025-07-22
-Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Lawn-Care-Medium			 33008178			40
-			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Limerick			 1000004		38		  ProviderC		 2025-05-12
-			 Limerick			 1000005		43		  ProviderA		 2025-02-20
-			 Limerick			 1000006		26		  ProviderC		 2025-08-30
-			 Limerick			 1000007		90		  ProviderA		 2025-02-20
-Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Lawn_Care-Large			 33008179			80
-			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Cork			 1000008		34		  ProviderD		 2025-08-30
-			 Galway			 1000009		20		  ProviderD		 2025-06-18
-			 Waterford			 1000010		52		  ProviderA		 2025-03-10
-			 Waterford			 1000011		75		  ProviderB		 2025-03-10
-Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Hedging-Small			 33008180			20
-			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Galway			 1000012		25		  ProviderB		 2025-05-12
-			 Mayo			 1000013		83		  ProviderD		 2025-06-18
-			 Waterford			 1000014		20		  ProviderD		 2025-04-05
-			 Waterford			 1000015		72		  ProviderD		 2025-03-10
-			 Galway			 1000016		33		  ProviderD		 2025-05-12
-Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Hedging-Medium			 33008181			40
-			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Mayo			 1000017		95		  ProviderA		 2025-03-10
-			 Dublin			 1000018		68		  ProviderC		 2025-01-15
-			 Waterford			 1000019		81		  ProviderA		 2025-03-10
-			 Galway			 1000020		38		  ProviderC		 2025-08-30
-			 Galway			 1000021		56		  ProviderA		 2025-05-12
-Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Hedging-Large			 33008182			80
-			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Limerick			 1000022		30		  ProviderA		 2025-07-22
-			 Limerick			 1000023		34		  ProviderC		 2025-01-15
-			 Mayo			 1000024		87		  ProviderA		 2025-01-15
-			 Dublin			 1000025		86		  ProviderD		 2025-07-22
-			 Waterford			 1000026		68		  ProviderC		 2025-04-05
+			 Compost delivery			 4007		40		  PipeWorks		 2025-06-01

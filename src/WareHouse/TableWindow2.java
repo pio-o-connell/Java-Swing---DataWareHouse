@@ -75,35 +75,25 @@ public class TableWindow2 extends JPanel {
                         if (viewRow < 0) {
                             //Selection got filtered away.
                             statusText3.setText("");
-            //----                detailTable=1;			-------//
                         } else {
                             if (viewRow >= table3.getRowCount()) {
                                 statusText3.setText("");
                                 return;
                             }
-							int modelRow = table3.convertRowIndexToModel(viewRow);
-                            statusText3.setText(
-                                String.format(" History displayed for Selected Row in view: %d. " +
-                                    "Selected Row in model: %d.", 
-                                    viewRow, modelRow));
-                    //        DetailsPanel.nameField.setText(maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemName());
-							ArrayList<history> historyList = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
-							if (modelRow < 0 || modelRow >= historyList.size()) {
-								statusText3.setText("");
-								return;
-							}
-							Mainframe.historyIndex=modelRow;
+                            int modelRow = table3.convertRowIndexToModel(viewRow);
+                            ArrayList<history> historyList = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
+                            if (modelRow < 0 || modelRow >= historyList.size()) {
+                                statusText3.setText("");
+                                return;
+                            }
+                            Mainframe.historyIndex = modelRow;
                             DetailsPanel.locationField.setText(historyList.get(Mainframe.historyIndex).getLocation());
-							DetailsPanel.amountField.setText(String.valueOf(historyList.get(Mainframe.historyIndex).getAmount()));
-							DetailsPanel.supplierField.setText(historyList.get(Mainframe.historyIndex).getSupplier());
-                            		
-                            		
-                  	//	    DetailsPanel.descriptionField.setText(currentHistoryPointer.get(i).getDescription());
-                  	//	    DetailsPanel.deliveryField.setText(currentHistoryPointer.get(i).getDeliveryDate());
-                  	//	    DetailsPanel.amountField.setText(String.valueOf(currentHistoryPointer.get(i).getAmount()));
-                  	//	    DetailsPanel.supplierField.setText(currentHistoryPointer.get(i).getSupplier());
-                  	//	    DetailsPanel.locationField.setText(maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getLocation());
-                            //setText("hello");
+                            DetailsPanel.amountField.setText(String.valueOf(historyList.get(Mainframe.historyIndex).getAmount()));
+                            DetailsPanel.supplierField.setText(historyList.get(Mainframe.historyIndex).getSupplier());
+                            DetailsPanel.deliveryField.setText(historyList.get(Mainframe.historyIndex).getDeliveryDate());
+                            DetailsPanel.notesArea.setText(historyList.get(Mainframe.historyIndex).getNotes());
+                            // Also update the Notes field in the south panel
+                            statusText3.setText(historyList.get(Mainframe.historyIndex).getNotes());
                         }
                     }
                 }

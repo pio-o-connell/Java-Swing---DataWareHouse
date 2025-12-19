@@ -18,14 +18,23 @@ public class history implements Serializable{
 	private String location;
 	private String provider;
 	private String deliveryDate;
+	private String notes; // Notes field
 
-	public history(int historyId, int itemId, int amount, String location, String provider, String deliveryDate) {
+	public history(int historyId, int itemId, int amount, String location, String provider, String deliveryDate, String notes) {
 		this.historyId = historyId;
 		this.itemId = itemId;
 		this.amount = amount;
 		this.location = location;
 		this.provider = provider;
 		this.deliveryDate = deliveryDate;
+		this.notes = notes;
+	}
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 	
 	public history(){

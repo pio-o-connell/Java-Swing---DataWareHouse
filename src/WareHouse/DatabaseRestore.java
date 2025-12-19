@@ -52,7 +52,7 @@ public class DatabaseRestore {
                 history11 = new ArrayList<history>();
                 while (historyResult.next()) {
 
-                    history11.add(new history(historyResult.getInt(1), historyResult.getInt(2), historyResult.getInt(3), historyResult.getString(4), historyResult.getString(5), historyResult.getString(6)));
+                    history11.add(new history(historyResult.getInt(1), historyResult.getInt(2), historyResult.getInt(3), historyResult.getString(4), historyResult.getString(5), historyResult.getString(6), historyResult.getString(7)));
                     System.out.println("\n history_id \t " + historyResult.getInt(1));
                     System.out.println("item_id " + historyResult.getInt(2));
                     System.out.println("amount" + historyResult.getInt(3));
@@ -68,6 +68,7 @@ public class DatabaseRestore {
                     itemsResult.getInt(2), // companyId
                     itemsResult.getInt(3), // quantity
                     itemsResult.getString(4), // itemName
+                    itemsResult.getString(5), // notes
                     history11
                 ));
 
