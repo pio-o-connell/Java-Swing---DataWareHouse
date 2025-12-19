@@ -257,19 +257,9 @@ public class TableWindow2 extends JPanel {
          * data can change.
          */
         public void setValueAt(Object value, int row, int col) {
-            if (DEBUG) {
-                System.out.println("Setting value at " + row + "," + col
-                                   + " to " + value
-                                   + " (an instance of "
-                                   + value.getClass() + ")");
-            }
-
-            data[row][col] = value;
-            fireTableCellUpdated(row, col);
-
-            if (DEBUG) {
-                System.out.println("New value of data:");
-                printDebugData();
+            if (row >= 0 && row < data.length && col >= 0 && col < data[0].length) {
+                data[row][col] = value;
+                fireTableCellUpdated(row, col);
             }
         }
 

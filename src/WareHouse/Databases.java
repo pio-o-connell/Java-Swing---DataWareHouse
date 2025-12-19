@@ -20,10 +20,10 @@ import java.sql.PreparedStatement;
 public final class Databases {
 
     Connection con;
-    ArrayList<Company> Company11 = new ArrayList<Company>();
-    ArrayList<history> history11 = new ArrayList<history>();
-    ArrayList<Item> Item11 = new ArrayList<Item>();
-    ArrayList<User> User11 = new ArrayList<User>();
+    ArrayList<Company> Company = new ArrayList<Company>();
+    ArrayList<history> History = new ArrayList<history>();
+    ArrayList<Item> Item = new ArrayList<Item>();
+    ArrayList<User> User = new ArrayList<User>();
 
     Databases(Connection con) throws Exception {
 
@@ -31,9 +31,74 @@ public final class Databases {
 
     }
 
-    public void setup(Connection con1, ArrayList<Company> Company11) throws SQLException {
-        this.con = con1;
-        this.Company11 = Company11;
+    // Loads the database tables into memory (Company, Item, User, History)
+    public boolean init(Connection con, ArrayList<Company> Company) {
+        this.con = con;
+        this.Company = Company;
+        try {
+            // Check if company table exists and has data
+            PreparedStatement checkCompany = con.prepareStatement("SELECT COUNT(*) FROM company");
+            ResultSet rsCompany = checkCompany.executeQuery();
+            int companyCount = 0;
+            if (rsCompany.next()) {
+                companyCount = rsCompany.getInt(1);
+            }
+            if (companyCount == 0) {
+                return false; // No data, need to generate test data
+            }
+
+            // Load items
+            ArrayList<Item> items = new ArrayList<>();
+            PreparedStatement statement = con.prepareStatement("SELECT * FROM ITEM");
+            ResultSet itemsResult = statement.executeQuery();
+            while (itemsResult.next()) {
+                int itemId = itemsResult.getInt(1);
+                int companyId = itemsResult.getInt(2);
+                int quantity = itemsResult.getInt(3);
+                String itemName = itemsResult.getString(4);
+
+                // Load history for this item
+                ArrayList<history> historyList = new ArrayList<>();
+                PreparedStatement histStmt = con.prepareStatement("SELECT * FROM HISTORY WHERE item_id = ?");
+                histStmt.setInt(1, itemId);
+                ResultSet histResult = histStmt.executeQuery();
+                while (histResult.next()) {
+                    int historyId = histResult.getInt(1);
+                    int amount = histResult.getInt(3);
+                    String location = histResult.getString(4);
+                    String provider = histResult.getString(5);
+                    String deliveryDate = histResult.getString(6);
+                    historyList.add(new history(historyId, itemId, amount, location, provider, deliveryDate));
+                }
+                items.add(new Item(itemId, companyId, quantity, itemName, historyList));
+            }
+
+            // Load users
+            ArrayList<User> users = new ArrayList<>();
+            PreparedStatement userStmt = con.prepareStatement("SELECT * FROM users");
+            ResultSet userResult = userStmt.executeQuery();
+            while (userResult.next()) {
+                users.add(new User(userResult.getInt(1), userResult.getInt(4), userResult.getString(2), userResult.getString(3)));
+            }
+
+            // Load companies
+            PreparedStatement companyStmt = con.prepareStatement("SELECT * FROM company");
+            ResultSet companyResult = companyStmt.executeQuery();
+            while (companyResult.next()) {
+                int companyId = companyResult.getInt(1);
+                String companyName = companyResult.getString(2);
+                Company.add(new Company(companyId, companyName, items, users));
+            }
+            return true;
+        } catch (SQLException sqlex) {
+            sqlex.printStackTrace();
+            return false;
+        }
+    }
+
+    public void setup(Connection con, ArrayList<Company> Company) throws SQLException {
+        this.con = con;
+        this.Company = Company;
 
         //select distinct items for the company
         try {
@@ -56,7 +121,7 @@ public final class Databases {
                 int companyId = itemsResult.getInt(2);
                 int quantity = itemsResult.getInt(3);
                 String itemName = itemsResult.getString(4);
-                history11 = new ArrayList<history>();
+                History = new ArrayList<history>();
 
                 // 3. Generate a random number of history records for each item
                 int numHistories = 2 + rand.nextInt(4); // 2-5 histories per item
@@ -80,15 +145,15 @@ public final class Databases {
                     insertHistory.executeUpdate();
 
                     // Add to in-memory model
-                    history11.add(new history(historyId, itemId, amount, location, provider, deliveryDate));
+                    History.add(new history(historyId, itemId, amount, location, provider, deliveryDate));
                 }
-                Item11.add(new Item(itemId, companyId, quantity, itemName, history11));
+                Item.add(new Item(itemId, companyId, quantity, itemName, History));
             }
             // Create the users - only one
             PreparedStatement statement3 = (PreparedStatement) con.prepareStatement("select * from users ");
             ResultSet result3 = statement3.executeQuery();
             while (result3.next()) {
-                User11.add(new User(result3.getInt(1), result3.getInt(4), result3.getString(2), result3.getString(3)));
+                User.add(new User(result3.getInt(1), result3.getInt(4), result3.getString(2), result3.getString(3)));
             }
 
             // Create the Company - only one
@@ -96,7 +161,7 @@ public final class Databases {
             ResultSet result4 = statement4.executeQuery();
             while (result4.next()) {
                 System.out.println("\n" + result4.getInt(1) + " name:" + result4.getString(2));
-                Company11.add(new Company(result4.getInt(1), result4.getString(2), Item11, User11));
+                Company.add(new Company(result4.getInt(1), result4.getString(2), Item, User));
             }
         } catch (SQLException sqlex) {
             sqlex.printStackTrace();
@@ -104,11 +169,11 @@ public final class Databases {
 
     }
 
-    public void deleteItemTransintoDatabase(Connection con1, ArrayList<Company> Company11) throws SQLException {
+    public void deleteItemTransintoDatabase(Connection con, ArrayList<Company> Company) throws SQLException {
 
         try {
 
-            ArrayList<Item> itemPointer = Company11.get(Mainframe.companyIndex).getItems();
+            ArrayList<Item> itemPointer = Company.get(Mainframe.companyIndex).getItems();
 
             itemPointer.remove(Mainframe.itemIndex);
             // remove from databases	
@@ -131,11 +196,11 @@ public final class Databases {
         }
     }
 
-    public void deleteHistoryTransintoDatabase(Connection con1, ArrayList<Company> Company11) throws SQLException {
-        this.con = con1;
+    public void deleteHistoryTransintoDatabase(Connection con, ArrayList<Company> Company) throws SQLException {
+        this.con = con;
         try {
 
-            ArrayList<history> historyPointer = Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistoryItem();
+            ArrayList<history> historyPointer = Company.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistoryItem();
             System.out.println("history  pointer..>" + historyPointer.get(Mainframe.historyIndex).getHistoryId());
             historyPointer.remove(Mainframe.historyIndex);
             // remove from history database
@@ -152,13 +217,13 @@ public final class Databases {
         }
     }
 
-    public void insertTransactionintoDatabase(Connection con1, ArrayList<Company> Company11) throws SQLException {
+    public void insertTransactionintoDatabase(Connection con, ArrayList<Company> Company) throws SQLException {
 
         try {
             PreparedStatement statement;
             statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(ITEM_id,AMOUNT,LOCATION,SUPPLIER,DELIVERY_DATE)  VALUES  (?,?,?,?,?)");
             //String name = DetailsPanel.nameField.getText();
-            int temp = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemId();
+            int temp = maindriver.Company.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemId();
             String location = DetailsPanel.locationField.getText();
             String supplier = DetailsPanel.supplierField.getText();
             String delivery = DetailsPanel.deliveryField.getText();
@@ -166,16 +231,16 @@ public final class Databases {
 
             int Amount = Integer.parseInt(tempAmount);
 
-            statement.setInt(1, maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemId());
+            statement.setInt(1, maindriver.Company.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemId());
             statement.setInt(2, Amount);
             statement.setString(3, location);
             statement.setString(4, supplier);
             statement.setString(5, delivery);
             statement.executeUpdate();
-            int total = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getQuantity();
+            int total = maindriver.Company.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getQuantity();
             total = total + Amount;
 
-            maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).setQuantity(Amount);
+            maindriver.Company.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).setQuantity(Amount);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -183,12 +248,12 @@ public final class Databases {
 
     }
 
-    public void insertNewItemTransintoDatabase(Connection con1, ArrayList<Company> Company11) throws SQLException {
+    public void insertNewItemTransintoDatabase(Connection con, ArrayList<Company> Company) throws SQLException {
 
         try {
 
             PreparedStatement statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  item(company_id,quantity,itemName)  VALUES  (?,?,?)");
-            int companyId = maindriver.Company11.get(Mainframe.companyIndex).getCompanyId();
+            int companyId = maindriver.Company.get(Mainframe.companyIndex).getCompanyId();
 
             String tempAmount = DetailsPanel.amountField.getText();
             int Amount = Integer.parseInt(tempAmount);
@@ -224,16 +289,16 @@ public final class Databases {
 
         //Item(int itemId,int companyId,int quantity,String itemName,ArrayList<history> historyItem)
         // now to add the item to the items array
-        int companyId = maindriver.Company11.get(Mainframe.companyIndex).getCompanyId();
+        int companyId = maindriver.Company.get(Mainframe.companyIndex).getCompanyId();
         String tempAmount = DetailsPanel.amountField.getText();
         int Amount = Integer.parseInt(tempAmount);
         String itemName = DetailsPanel.nameField.getText();
         ArrayList<history> tempHistory = new ArrayList<history>();
 
             Item tempItem = new Item(item_id, companyId, Amount, itemName, tempHistory);
-        ArrayList<Item> currentItemPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems();
+        ArrayList<Item> currentItemPointer = maindriver.Company.get(Mainframe.companyIndex).getItems();
         currentItemPointer.add(tempItem);
-        Mainframe.itemIndex = (Company11.get(Mainframe.companyIndex).getItems().size());
+        Mainframe.itemIndex = (Company.get(Mainframe.companyIndex).getItems().size());
 
         // Now to create entry in the history database
         try {
@@ -269,8 +334,8 @@ public final class Databases {
             }
 
             // update history array
-            int itemSize = maindriver.Company11.get(Mainframe.companyIndex).getItems().size();
-            ArrayList<history> currentItemHistoryPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(itemSize - 1).getHistory();
+            int itemSize = maindriver.Company.get(Mainframe.companyIndex).getItems().size();
+            ArrayList<history> currentItemHistoryPointer = maindriver.Company.get(Mainframe.companyIndex).getItems().get(itemSize - 1).getHistory();
 
             /*	  currentItemHistoryPointer.get(0).getHistoryId();
 						  currentItemHistoryPointer.get(0).setItemId(item_id);

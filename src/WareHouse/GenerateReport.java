@@ -23,12 +23,12 @@ import java.util.Date;
 
 public class GenerateReport {
 
-	ArrayList<Company> Company11= new ArrayList<Company>();
+	ArrayList<Company> Company = new ArrayList<Company>();
 	
 	Date dateFrom;
 	Date dateTo;
 	
-	GenerateReport(ArrayList<Company> Company11) throws IOException{
+	GenerateReport(ArrayList<Company> Company) throws IOException{
 		this.Company11 = Company11;
 		File outputFile = new File("Report-JavaProject.txt");
 		FileWriter out = new FileWriter(outputFile);
@@ -46,9 +46,7 @@ public class GenerateReport {
 				outputStream.println("Item Name: \t\t\tItem Id: \t\t Item Quantity: \t\tItem Location: ");
 				outputStream.println(Company11.get(i).getItems().get(j).getItemName()+"\t\t\t " +Company11.get(i).getItems().get(j).getItemId()+
 								"\t\t\t" +Company11.get(i).getItems().get(j).getQuantity());
-			//	outputStream.print("\t\t\t " +Company11.get(i).getItems().get(j).getItemId());
-			//	outputStream.print("\t\t\t" +Company11.get(i).getItems().get(j).getQuantity());
-			//	outputStream.println("\t\t\t\t"+Company11.get(i).getItems().get(j).getLocation());
+
 				outputStream.println("\t\t\tHistory Location: \t\t\tHistoryId:  \t\t Amount: \t\tSupplier: \t\tDelivery Date: ");
 	    		for(int k=0;k<Company11.get(i).getItems().get(j).getHistory().size();k++){
 	    			
@@ -57,10 +55,7 @@ public class GenerateReport {
 	    					"\t\t  "+ Company11.get(i).getItems().get(j).getHistory().get(k).getSupplier()+
 	    					"\t\t "+Company11.get(i).getItems().get(j).getHistory().get(k).getDeliveryDate()
 	    					);
-	    	//		outputStream.print("\t\t\t\t\t "+ Company11.get(i).getItems().get(j).getHistory().get(k).getHistoryId());
-	    	//		outputStream.print("\t\t"+Company11.get(i).getItems().get(j).getHistory().get(k).getAmount());
-	    	//		outputStream.print("\t\t  "+ Company11.get(i).getItems().get(j).getHistory().get(k).getSupplier());
-	    	//		outputStream.println("\t\t "+Company11.get(i).getItems().get(j).getHistory().get(k).getDeliveryDate());
+
 	    			
 	    		}
 	    	}

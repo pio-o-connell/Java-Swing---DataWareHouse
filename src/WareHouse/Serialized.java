@@ -16,45 +16,35 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class Serialized {
-	private ArrayList<Company> Company11;
+	private ArrayList<Company> Company;
 	
-	public Serialized(ArrayList<Company> Company11){
-	
-		this.Company11 = Company11;
-		try {
-			if(Company11!=null){
-			FileOutputStream fileStream = new FileOutputStream("Company11.ser");
-			ObjectOutputStream os=new ObjectOutputStream(fileStream);
-			
-			os.writeObject(Company11);
-			
-			os.close();
-			fileStream.close();
-			}
-			else
-			{
-				System.out.println("Null Object");
-			}
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
+	       public Serialized(ArrayList<Company> Company){
+		       this.Company = Company;
+		       try {
+			       if(Company!=null){
+				       FileOutputStream fileStream = new FileOutputStream("Company.ser");
+				       ObjectOutputStream os=new ObjectOutputStream(fileStream);
+				       os.writeObject(Company);
+				       os.close();
+				       fileStream.close();
+			       }
+			       else {
+				       System.out.println("Null Object");
+			       }
+		       } catch (FileNotFoundException e) {
+			       e.printStackTrace();
+		       } catch (IOException e) {
+			       e.printStackTrace();
+		       }
+	       }
 
-	}
-
-	public void restoreSerialized(ArrayList<Company> company11) {
-		this.Company11 = company11;
-		try {
-			FileInputStream fileStream= new FileInputStream("Company11.ser");
-			ObjectInputStream os = new ObjectInputStream(fileStream);
-			
-			company11 =(ArrayList<Company> )os.readObject();
-			System.out.println("Location"+(String) company11.get(0).getItems().get(0).getHistory().get(0).getLocation());
+	       public void restoreSerialized(ArrayList<Company> Company) {
+		       this.Company = Company;
+		       try {
+			       FileInputStream fileStream= new FileInputStream("Company.ser");
+			       ObjectInputStream os = new ObjectInputStream(fileStream);
+			       Company =(ArrayList<Company> )os.readObject();
+			       System.out.println("Location"+(String) Company.get(0).getItems().get(0).getHistory().get(0).getLocation());
 	
 			
 			os.close();

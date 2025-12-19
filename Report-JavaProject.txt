@@ -1,72 +1,78 @@
-DateFri Dec 19 04:16:27 GMT 2025
+DateFri Dec 19 16:28:25 GMT 2025
 Company Name: Kanturk-Services	Company Id: 44008177
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
 Lawn-Care-Small			 33008177			20
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Mayo			 1000000		85		  ProviderB		 2025-04-05
-			 Mayo			 1000001		71		  ProviderA		 2025-01-15
-			 Cork			 1000002		83		  ProviderC		 2025-05-12
+			 Galway			 1000000		65		  ProviderD		 2025-03-10
+			 Galway			 1000001		74		  ProviderD		 2025-01-15
+			 Dublin			 1000002		26		  ProviderA		 2025-07-22
+			 Waterford			 1000003		96		  ProviderA		 2025-03-10
+			 Limerick			 1000004		17		  ProviderC		 2025-08-30
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
 Lawn-Care-Medium			 33008178			40
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Limerick			 1000003		30		  ProviderB		 2025-04-05
-			 Mayo			 1000004		73		  ProviderD		 2025-04-05
-			 Galway			 1000005		58		  ProviderA		 2025-07-22
+			 Limerick			 1000005		20		  ProviderB		 2025-04-05
+			 Mayo			 1000006		79		  ProviderB		 2025-03-10
+			 Dublin			 1000007		21		  ProviderB		 2025-03-10
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
 Lawn_Care-Large			 33008179			80
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Waterford			 1000006		99		  ProviderD		 2025-07-22
-			 Dublin			 1000007		40		  ProviderA		 2025-06-18
+			 Cork			 1000008		18		  ProviderA		 2025-07-22
+			 Galway			 1000009		78		  ProviderA		 2025-07-22
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
 Hedging-Small			 33008180			20
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Dublin			 1000008		76		  ProviderC		 2025-06-18
-			 Dublin			 1000009		14		  ProviderC		 2025-08-30
-			 Mayo			 1000010		99		  ProviderD		 2025-06-18
-			 Dublin			 1000011		16		  ProviderB		 2025-05-12
+			 Dublin			 1000010		35		  ProviderD		 2025-07-22
+			 Galway			 1000011		11		  ProviderD		 2025-02-20
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
 Hedging-Medium			 33008181			40
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Cork			 1000012		92		  ProviderD		 2025-02-20
-			 Mayo			 1000013		66		  ProviderA		 2025-04-05
+			 Dublin			 1000012		95		  ProviderC		 2025-08-30
+			 Dublin			 1000013		96		  ProviderD		 2025-05-12
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
 Hedging-Large			 33008182			80
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Galway			 1000014		77		  ProviderB		 2025-02-20
-			 Waterford			 1000015		84		  ProviderB		 2025-05-12
-DateFri Dec 19 04:16:27 GMT 2025
+			 Dublin			 1000014		14		  ProviderD		 2025-06-18
+			 Cork			 1000015		15		  ProviderC		 2025-01-15
+			 Cork			 1000016		91		  ProviderC		 2025-02-20
+			 Limerick			 1000017		39		  ProviderA		 2025-06-18
+			 Cork			 1000018		40		  ProviderD		 2025-06-18
+DateFri Dec 19 16:28:25 GMT 2025
 Company Name: Mallow-Services	Company Id: 55008177
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
 Lawn-Care-Small			 33008177			20
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Mayo			 1000000		85		  ProviderB		 2025-04-05
-			 Mayo			 1000001		71		  ProviderA		 2025-01-15
-			 Cork			 1000002		83		  ProviderC		 2025-05-12
+			 Galway			 1000000		65		  ProviderD		 2025-03-10
+			 Galway			 1000001		74		  ProviderD		 2025-01-15
+			 Dublin			 1000002		26		  ProviderA		 2025-07-22
+			 Waterford			 1000003		96		  ProviderA		 2025-03-10
+			 Limerick			 1000004		17		  ProviderC		 2025-08-30
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
 Lawn-Care-Medium			 33008178			40
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Limerick			 1000003		30		  ProviderB		 2025-04-05
-			 Mayo			 1000004		73		  ProviderD		 2025-04-05
-			 Galway			 1000005		58		  ProviderA		 2025-07-22
+			 Limerick			 1000005		20		  ProviderB		 2025-04-05
+			 Mayo			 1000006		79		  ProviderB		 2025-03-10
+			 Dublin			 1000007		21		  ProviderB		 2025-03-10
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
 Lawn_Care-Large			 33008179			80
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Waterford			 1000006		99		  ProviderD		 2025-07-22
-			 Dublin			 1000007		40		  ProviderA		 2025-06-18
+			 Cork			 1000008		18		  ProviderA		 2025-07-22
+			 Galway			 1000009		78		  ProviderA		 2025-07-22
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
 Hedging-Small			 33008180			20
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Dublin			 1000008		76		  ProviderC		 2025-06-18
-			 Dublin			 1000009		14		  ProviderC		 2025-08-30
-			 Mayo			 1000010		99		  ProviderD		 2025-06-18
-			 Dublin			 1000011		16		  ProviderB		 2025-05-12
+			 Dublin			 1000010		35		  ProviderD		 2025-07-22
+			 Galway			 1000011		11		  ProviderD		 2025-02-20
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
 Hedging-Medium			 33008181			40
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Cork			 1000012		92		  ProviderD		 2025-02-20
-			 Mayo			 1000013		66		  ProviderA		 2025-04-05
+			 Dublin			 1000012		95		  ProviderC		 2025-08-30
+			 Dublin			 1000013		96		  ProviderD		 2025-05-12
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
 Hedging-Large			 33008182			80
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Galway			 1000014		77		  ProviderB		 2025-02-20
-			 Waterford			 1000015		84		  ProviderB		 2025-05-12
+			 Dublin			 1000014		14		  ProviderD		 2025-06-18
+			 Cork			 1000015		15		  ProviderC		 2025-01-15
+			 Cork			 1000016		91		  ProviderC		 2025-02-20
+			 Limerick			 1000017		39		  ProviderA		 2025-06-18
+			 Cork			 1000018		40		  ProviderD		 2025-06-18

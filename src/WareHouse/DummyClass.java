@@ -3,7 +3,7 @@ package WareHouse;
 /*-----------------------------------------------------------------------------------*/
 // The 'Dummy' Class was used to 'build' in memory the Company data structure.
 // The Dummy() constructor creates the data structure and once created can
-// be accessed using getCompany11 and setCompany11 setters and getters
+// be accessed using getCompany and setCompany setters and getters
 /*-----------------------------------------------------------------------------------*/
 
 
@@ -23,7 +23,7 @@ public class DummyClass
 {
 	private ArrayList<history> history11 = new ArrayList<history>();
 	private ArrayList<Item> Items11 = new ArrayList<Item>();
-	private ArrayList<Company> Company11 = new ArrayList<Company>();
+	private ArrayList<Company> Company = new ArrayList<Company>();
 	private ArrayList<User> User11 = new ArrayList<User>();
 
 	
@@ -82,7 +82,7 @@ public class DummyClass
 		
 		User11.add(new User(1111,1111,"test","ferdia123"));
 	
-		Company11.add(new Company(44008177,"Ericksson",Items11,User11));
+		Company.add(new Company(44008177,"Ericksson",Items11,User11));
 	
 	//	Items11 = new ArrayList<Item>();
 		
@@ -131,7 +131,7 @@ public class DummyClass
 		Items11.add(new Item(33008177,44008177,"Limerick",600,"Bearings",history11));
 		history11= new ArrayList<history>();
 		
-		Company11.add(new Company(44008177,"Apple",Items11,User11));
+		Company.add(new Company(44008177,"Apple",Items11,User11));
 		Items11=new ArrayList<Item>();
 		
 		
@@ -169,7 +169,7 @@ public class DummyClass
 		
 		
 		
-		Company11.add(new Company(44448177,"Krupps",Items11,User11));
+		Company.add(new Company(44448177,"Krupps",Items11,User11));
 		Items11=new ArrayList<Item>();
 		
 	// Fourth Company -- Sony --------------------------------------------------------
@@ -187,7 +187,7 @@ public class DummyClass
 
 		Items11.add(new Item(34343434,98989898,"London",1000,"Washers",history11));
 		history11= new ArrayList<history>();	
-		Company11.add(new Company(98989898,"Sony",Items11,User11));		
+		Company.add(new Company(98989898,"Sony",Items11,User11));
 		Items11=new ArrayList<Item>();
 		
 		
@@ -208,7 +208,7 @@ public class DummyClass
 
 		Items11.add(new Item(54545454,98989866,"Paris",1200,"Washers",history11));
 		history11= new ArrayList<history>();
-		Company11.add(new Company(98989866,"KraftWerk",Items11,User11));		
+		Company.add(new Company(98989866,"KraftWerk",Items11,User11));
 		Items11=new ArrayList<Item>();
 		
 		// Sixth Company -- Lidl -------------------------------------------------
@@ -218,7 +218,7 @@ public class DummyClass
 		
 		Items11.add(new Item(34567654,98989894,"San Francisco",200,"Washers",history11));
 		history11= new ArrayList<history>();
-		Company11.add(new Company(98989894,"KraftWerk",Items11,User11));	
+		Company.add(new Company(98989894,"KraftWerk",Items11,User11));
 		Items11=new ArrayList<Item>();
 		
 		// Seventh Company -- Aldi --------------------------------------------
@@ -228,18 +228,18 @@ public class DummyClass
 		
 		Items11.add(new Item(56789453,45657677,"Johannesburg",200,"Washers",history11));
 		history11= new ArrayList<history>();
-		Company11.add(new Company(45657677,"Aldi",Items11,User11));	
+		Company.add(new Company(45657677,"Aldi",Items11,User11));
 		Items11=new ArrayList<Item>();
 		
 		*/
 	}
 
-	public ArrayList<Company> getCompany11() {
-		return Company11;
+	public ArrayList<Company> getCompany() {
+		return Company;
 	}
 
-	public void setCompany11(ArrayList<Company> company11) {
-		Company11 = company11;
+	public void setCompany(ArrayList<Company> company) {
+		Company = company;
 	}
 	
  

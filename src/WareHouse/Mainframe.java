@@ -39,21 +39,8 @@ import javax.swing.JTextField;
 public class Mainframe extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private DetailsPanel detailsPanel;
-//	private TableFilterDemo detailTable;
 
-	/* These static Array is used to keep all the records read in from Dummy class */
-	/* The static variables hold the current selections in the 3 selection windows */
-	/* Because the window is laid out across different files, static variables were used /*
-	 *  Without implementing abstract classes it was necessary to use static arrays,variables etc */
-	
-//	public static ArrayList<history> history11 = new ArrayList<history>();
-// static ArrayList<Item> Items11 = new ArrayList<Item>();
-//	public static ArrayList<Company> Company11 = new ArrayList<Company>();
 	public static int companyIndex=0,itemIndex=0,historyIndex=0;
-	
-	/* Dummy Class builds the entire structure 'correctly' as specified in the Assignment Semester 2 */
-	
-//	private DummyClass dummyclass = new DummyClass();
 	
 	
 	public static TableWindow1 detailTable1; //  contains the company table and items table
@@ -72,7 +59,7 @@ public class Mainframe extends JFrame {
 			super(title);
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC","root","ROOT");
-	//		maindriver.Company11 = dummyclass.getCompany11(); // build the data structure
+
 			
 			
 			
