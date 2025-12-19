@@ -38,23 +38,51 @@ public final class Databases {
         //select distinct items for the company
         try {
 
-            String query = "SELECT DISTINCT ITEM_ID from ITEM";
+            // 1. Delete all old history data
+            PreparedStatement deleteHistory = (PreparedStatement) con.prepareStatement("DELETE FROM HISTORY");
+            deleteHistory.executeUpdate();
+
+            // 2. Load items
             PreparedStatement statement = (PreparedStatement) con.prepareStatement("SELECT * from ITEM");
             ResultSet itemsResult = statement.executeQuery();
+            java.util.Random rand = new java.util.Random();
+            String[] locations = {"Cork", "Dublin", "Mayo", "Limerick", "Galway", "Waterford"};
+            String[] providers = {"ProviderA", "ProviderB", "ProviderC", "ProviderD"};
+            String[] datePool = {"2025-01-15", "2025-02-20", "2025-03-10", "2025-04-05", "2025-05-12", "2025-06-18", "2025-07-22", "2025-08-30"};
 
+            int historyIdCounter = 1000000;
             while (itemsResult.next()) {
-                PreparedStatement statement1 = (PreparedStatement) con.prepareStatement("SELECT * FROM HISTORY WHERE ITEM_ID="
-                        + itemsResult.getInt(1) + "");
-                ResultSet historyResult = statement1.executeQuery();
+                int itemId = itemsResult.getInt(1);
+                int companyId = itemsResult.getInt(2);
+                int quantity = itemsResult.getInt(3);
+                String itemName = itemsResult.getString(4);
                 history11 = new ArrayList<history>();
-                while (historyResult.next()) {
 
-                    history11.add(new history(historyResult.getInt(1), historyResult.getInt(2), historyResult.getInt(3), historyResult.getString(4), historyResult.getString(5), historyResult.getString(6)));
+                // 3. Generate a random number of history records for each item
+                int numHistories = 2 + rand.nextInt(4); // 2-5 histories per item
+                for (int h = 0; h < numHistories; h++) {
+                    int historyId = historyIdCounter++;
+                    int amount = 10 + rand.nextInt(90); // 10-99
+                    String location = locations[rand.nextInt(locations.length)];
+                    String provider = providers[rand.nextInt(providers.length)];
+                    String deliveryDate = datePool[rand.nextInt(datePool.length)];
 
+                    // Insert into DB
+                    PreparedStatement insertHistory = (PreparedStatement) con.prepareStatement(
+                        "INSERT INTO HISTORY (history_id, item_id, amount, location, provider, delivery_date) VALUES (?, ?, ?, ?, ?, ?)"
+                    );
+                    insertHistory.setInt(1, historyId);
+                    insertHistory.setInt(2, itemId);
+                    insertHistory.setInt(3, amount);
+                    insertHistory.setString(4, location);
+                    insertHistory.setString(5, provider);
+                    insertHistory.setString(6, deliveryDate);
+                    insertHistory.executeUpdate();
+
+                    // Add to in-memory model
+                    history11.add(new history(historyId, itemId, amount, location, provider, deliveryDate));
                 }
-
-                Item11.add(new Item(itemsResult.getInt(1), itemsResult.getInt(2), itemsResult.getString(5), itemsResult.getInt(3), itemsResult.getString(4), history11));
-
+                Item11.add(new Item(itemId, companyId, quantity, itemName, history11));
             }
             // Create the users - only one
             PreparedStatement statement3 = (PreparedStatement) con.prepareStatement("select * from users ");
@@ -128,10 +156,10 @@ public final class Databases {
 
         try {
             PreparedStatement statement;
-            statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(ITEM_id,AMOUNT,DESCRIPTION,SUPPLIER,DELIVERY_DATE)  VALUES  (?,?,?,?,?)");
+            statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(ITEM_id,AMOUNT,LOCATION,SUPPLIER,DELIVERY_DATE)  VALUES  (?,?,?,?,?)");
             //String name = DetailsPanel.nameField.getText();
             int temp = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemId();
-            String description = DetailsPanel.descriptionField.getText();
+            String location = DetailsPanel.locationField.getText();
             String supplier = DetailsPanel.supplierField.getText();
             String delivery = DetailsPanel.deliveryField.getText();
             String tempAmount = DetailsPanel.amountField.getText();
@@ -140,7 +168,7 @@ public final class Databases {
 
             statement.setInt(1, maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemId());
             statement.setInt(2, Amount);
-            statement.setString(3, description);
+            statement.setString(3, location);
             statement.setString(4, supplier);
             statement.setString(5, delivery);
             statement.executeUpdate();
@@ -159,18 +187,16 @@ public final class Databases {
 
         try {
 
-            PreparedStatement statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  item(company_id,quantity,itemName,Location)  VALUES  (?,?,?,?)");
+            PreparedStatement statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  item(company_id,quantity,itemName)  VALUES  (?,?,?)");
             int companyId = maindriver.Company11.get(Mainframe.companyIndex).getCompanyId();
 
             String tempAmount = DetailsPanel.amountField.getText();
             int Amount = Integer.parseInt(tempAmount);
             String itemName = DetailsPanel.nameField.getText();
-            String location = DetailsPanel.locationField.getText();
 
             statement.setInt(1, companyId);
             statement.setInt(2, Amount);
             statement.setString(3, itemName);
-            statement.setString(4, location);
             statement.executeUpdate();
 
             // update Item Array
@@ -196,16 +222,15 @@ public final class Databases {
             e.printStackTrace();
         }
 
-        //Item(int itemId,int companyId,String Location,int quantity,String itemName,ArrayList<history> historyItem)
+        //Item(int itemId,int companyId,int quantity,String itemName,ArrayList<history> historyItem)
         // now to add the item to the items array
         int companyId = maindriver.Company11.get(Mainframe.companyIndex).getCompanyId();
         String tempAmount = DetailsPanel.amountField.getText();
         int Amount = Integer.parseInt(tempAmount);
         String itemName = DetailsPanel.nameField.getText();
-        String location = DetailsPanel.locationField.getText();
         ArrayList<history> tempHistory = new ArrayList<history>();
 
-        Item tempItem = new Item(item_id, companyId, location, Amount, itemName, tempHistory);
+            Item tempItem = new Item(item_id, companyId, Amount, itemName, tempHistory);
         ArrayList<Item> currentItemPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems();
         currentItemPointer.add(tempItem);
         Mainframe.itemIndex = (Company11.get(Mainframe.companyIndex).getItems().size());
@@ -213,20 +238,20 @@ public final class Databases {
         // Now to create entry in the history database
         try {
             PreparedStatement statement;
-            statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(ITEM_id,AMOUNT,DESCRIPTION,SUPPLIER,DELIVERY_DATE)  VALUES  (?,?,?,?,?)");
+            statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(ITEM_id,AMOUNT,LOCATION,SUPPLIER,DELIVERY_DATE)  VALUES  (?,?,?,?,?)");
             //String name = DetailsPanel.nameField.getText();
 
             int temp = item_id;
-            String description = DetailsPanel.descriptionField.getText();
+            String location = DetailsPanel.locationField.getText();
             String supplier = DetailsPanel.supplierField.getText();
             String delivery = DetailsPanel.deliveryField.getText();
             String tempAmount1 = DetailsPanel.amountField.getText();
             int Amount1 = Integer.parseInt(tempAmount);
-            System.out.println("5 total" + temp + description + supplier + delivery + tempAmount1);
+            System.out.println("5 total" + temp + location + supplier + delivery + tempAmount1);
             //		 statement.setInt(1, maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemId());
             statement.setInt(1, item_id);
             statement.setInt(2, Amount);
-            statement.setString(3, description);
+            statement.setString(3, location);
             statement.setString(4, supplier);
             statement.setString(5, delivery);
             statement.executeUpdate();
@@ -250,7 +275,7 @@ public final class Databases {
             /*	  currentItemHistoryPointer.get(0).getHistoryId();
 						  currentItemHistoryPointer.get(0).setItemId(item_id);
 						  currentItemHistoryPointer.get(0).setAmount(Amount);
-						  currentItemHistoryPointer.get(0).setDescription(description);
+                          currentItemHistoryPointer.get(0).setLocation(location);
 						  currentItemHistoryPointer.get(0).setSupplier(supplier);
 						  currentItemHistoryPointer.get(0).setDeliveryDate(delivery);*/
         } catch (Exception e) {

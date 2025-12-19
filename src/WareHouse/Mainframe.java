@@ -12,6 +12,7 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,8 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
-import com.mysql.jdbc.Connection;
 
 /*---------------------------------------------------------------------------------------
 /*
@@ -71,8 +70,8 @@ public class Mainframe extends JFrame {
 		
 		public Mainframe(String title) throws Exception{
 			super(title);
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con=(Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/warehouse","root","root");
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC","root","ROOT");
 	//		maindriver.Company11 = dummyclass.getCompany11(); // build the data structure
 			
 			

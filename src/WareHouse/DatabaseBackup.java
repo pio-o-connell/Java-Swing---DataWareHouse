@@ -52,6 +52,11 @@ public class DatabaseBackup {
             statement = (PreparedStatement) con.prepareStatement(query);
             statement.executeUpdate();
 
+                statement = (PreparedStatement) con.prepareStatement(
+                    "ALTER TABLE Item ADD UNIQUE KEY uq_item_id (Item_ID)"
+                );
+                statement.executeUpdate();
+
             query = " CREATE TABLE Users("
                     + "User_ID INT NOT NULL,"
                     + "User_Name CHAR(25) NULL,"
@@ -70,8 +75,7 @@ public class DatabaseBackup {
                     + "Company_ID INT NOT NULL,"
                     + "quantity INT NULL,"
                     + "itemName CHAR(25) NULL,"
-                    + "Location CHAR(25) NULL,"
-                    + "PRIMARY KEY(Item_ID,Company_ID),"
+                    + "PRIMARY KEY(Item_ID)," 
                     + "CONSTRAINT fk_companies FOREIGN KEY(Company_ID)"
                     + "REFERENCES Company(Company_ID)"
                     + ")"
@@ -83,12 +87,12 @@ public class DatabaseBackup {
                     + "history_id INT NOT NULL AUTO_INCREMENT,"
                     + "item_ID INT NOT NULL,"
                     + "amount INT NULL,"
-                    + "description CHAR(25) NULL,"
+                    + "location CHAR(25) NULL,"
                     + "Supplier CHAR(25) NULL,"
                     + "Delivery_Date DATE NULL,"
                     + "PRIMARY KEY(history_id,item_ID),"
                     + "CONSTRAINT fk_items FOREIGN KEY(item_ID) "
-                    + "REFERENCES Item(item_ID)"
+                    + "REFERENCES Item(Item_ID)"
                     + ")"
                     + "ENGINE = InnoDB ";
 
@@ -104,7 +108,7 @@ public class DatabaseBackup {
             System.out.println("Sizeof items array" + Company11.get(0).getItems().size());
 
             //for history
-            System.out.println(Company11.get(0).getItems().get(0).getHistory().get(0).getDescription());
+            System.out.println(Company11.get(0).getItems().get(0).getHistory().get(0).getLocation());
             System.out.println("Sizeof history array" + Company11.get(0).getItems().get(0).getHistory().size());
 
             System.out.println("Sizeof history array" + Company11.get(0).getItems().get(1).getHistory().size());
@@ -121,20 +125,19 @@ public class DatabaseBackup {
                 statement.executeUpdate();
                 for (int j = 0; j < Company11.get(i).getItems().size(); j++) {
 
-                    statement = (PreparedStatement) con.prepareStatement("INSERT INTO ITEM(ITEM_ID,COMPANY_ID,QUANTITY,ITEMNAME,LOCATION)  VALUES  (?,?,?,?,?)");
+                    statement = (PreparedStatement) con.prepareStatement("INSERT INTO ITEM(ITEM_ID,COMPANY_ID,QUANTITY,ITEMNAME)  VALUES  (?,?,?,?)");
                     statement.setInt(1, Company11.get(i).getItems().get(j).getItemId());
                     statement.setInt(2, Company11.get(i).getCompanyId());
                     statement.setInt(3, Company11.get(i).getItems().get(j).getQuantity());
                     statement.setString(4, Company11.get(i).getItems().get(j).getItemName());
-                    statement.setString(5, Company11.get(i).getItems().get(j).getLocation());
                     statement.executeUpdate();
 
                     for (int k = 0; k < Company11.get(i).getItems().get(j).getHistory().size(); k++) {
-                        statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(HISTORY_ID,ITEM_id,AMOUNT,DESCRIPTION,SUPPLIER,DELIVERY_DATE)  VALUES  (?,?,?,?,?,?)");
+                        statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(HISTORY_ID,ITEM_id,AMOUNT,LOCATION,SUPPLIER,DELIVERY_DATE)  VALUES  (?,?,?,?,?,?)");
                         statement.setInt(1, Company11.get(i).getItems().get(j).getHistory().get(k).getHistoryId());
                         statement.setInt(2, Company11.get(i).getItems().get(j).getItemId());
                         statement.setInt(3, Company11.get(i).getItems().get(j).getHistory().get(k).getAmount());
-                        statement.setString(4, Company11.get(i).getItems().get(j).getHistory().get(k).getDescription());
+                        statement.setString(4, Company11.get(i).getItems().get(j).getHistory().get(k).getLocation());
                         statement.setString(5, Company11.get(i).getItems().get(j).getHistory().get(k).getSupplier());
                         statement.setString(6, Company11.get(i).getItems().get(j).getHistory().get(k).getDeliveryDate());
 

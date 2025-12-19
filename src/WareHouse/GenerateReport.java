@@ -45,14 +45,14 @@ public class GenerateReport {
 			for(int j=0;j<Company11.get(i).getItems().size();j++){
 				outputStream.println("Item Name: \t\t\tItem Id: \t\t Item Quantity: \t\tItem Location: ");
 				outputStream.println(Company11.get(i).getItems().get(j).getItemName()+"\t\t\t " +Company11.get(i).getItems().get(j).getItemId()+
-						"\t\t\t" +Company11.get(i).getItems().get(j).getQuantity()+"\t\t\t\t"+Company11.get(i).getItems().get(j).getLocation());
+								"\t\t\t" +Company11.get(i).getItems().get(j).getQuantity());
 			//	outputStream.print("\t\t\t " +Company11.get(i).getItems().get(j).getItemId());
 			//	outputStream.print("\t\t\t" +Company11.get(i).getItems().get(j).getQuantity());
 			//	outputStream.println("\t\t\t\t"+Company11.get(i).getItems().get(j).getLocation());
-				outputStream.println("\t\t\tHistory Description: \t\t\tHistoryId:  \t\t Amount: \t\tSupplier: \t\tDelivery Date: ");
+				outputStream.println("\t\t\tHistory Location: \t\t\tHistoryId:  \t\t Amount: \t\tSupplier: \t\tDelivery Date: ");
 	    		for(int k=0;k<Company11.get(i).getItems().get(j).getHistory().size();k++){
 	    			
-	    			outputStream.println("\t\t\t "+ Company11.get(i).getItems().get(j).getHistory().get(k).getDescription()+"\t\t\t "+ Company11.get(i).getItems().get(j).getHistory().get(k).getHistoryId()+
+					outputStream.println("\t\t\t "+ Company11.get(i).getItems().get(j).getHistory().get(k).getLocation()+"\t\t\t "+ Company11.get(i).getItems().get(j).getHistory().get(k).getHistoryId()+
 	    					"\t\t"+Company11.get(i).getItems().get(j).getHistory().get(k).getAmount()+
 	    					"\t\t  "+ Company11.get(i).getItems().get(j).getHistory().get(k).getSupplier()+
 	    					"\t\t "+Company11.get(i).getItems().get(j).getHistory().get(k).getDeliveryDate()
@@ -86,8 +86,19 @@ public class GenerateReport {
 			for(int j=0;j<Company11.get(i).getItems().size();j++){
 				for(int k=0;k<Company11.get(i).getItems().get(j).getHistory().size();k++){
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-					
-				    currentDate = format.parse(Company11.get(i).getItems().get(j).getHistory().get(k).getDeliveryDate());
+					String deliveryDate = Company11.get(i).getItems().get(j).getHistory().get(k).getDeliveryDate();
+					if (deliveryDate == null) {
+						continue;
+					}
+					deliveryDate = deliveryDate.trim();
+					if (deliveryDate.isEmpty()) {
+						continue;
+					}
+					try {
+						currentDate = format.parse(deliveryDate);
+					} catch (Exception e) {
+						continue;
+					}
 					if ((currentDate.after (dateFrom)) && (currentDate.before (dateTo ))){
 						index.setI (i);
 						index.setJ(j);

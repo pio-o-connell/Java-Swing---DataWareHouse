@@ -10,20 +10,18 @@ import java.util.Date;
  * 
  ---------------------------------------------------------------------------------------*/
 public class history implements Serializable{
-	private int historyId,itemId,amount;
-	private String description;
-	private String supplier;
+	private int historyId, itemId, amount;
+	private String location;
+	private String provider;
 	private String deliveryDate;
-	
-	
-	public history(int historyId,int itemId,int amount,String description,String supplier,String deliverydate){
-		this.historyId=historyId;
-		this.itemId=itemId;
-		this.deliveryDate=deliverydate;
-		this.description=description;
-		this.amount=amount;	
-		this.supplier=supplier;
-		
+
+	public history(int historyId, int itemId, int amount, String location, String provider, String deliveryDate) {
+		this.historyId = historyId;
+		this.itemId = itemId;
+		this.amount = amount;
+		this.location = location;
+		this.provider = provider;
+		this.deliveryDate = deliveryDate;
 	}
 	
 	public history(){
@@ -54,20 +52,20 @@ public class history implements Serializable{
 		this.amount = amount;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getLocation() {
+		return location;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
-	public String getSupplier() {
-		return supplier;
+	public String getProvider() {
+		return provider;
 	}
 
-	public void setSupplier(String supplier) {
-		this.supplier = supplier;
+	public void setProvider(String provider) {
+		this.provider = provider;
 	}
 
 	public String getDeliveryDate() {
@@ -78,4 +76,7 @@ public class history implements Serializable{
 		this.deliveryDate = deliveryDate;
 	}
 	
+	public String getSupplier() {
+		return provider;
+	}
 }

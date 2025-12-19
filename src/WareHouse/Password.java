@@ -14,7 +14,7 @@ public class Password {
 		String user = JOptionPane.showInputDialog(null,"User");
 		String password = JOptionPane.showInputDialog(null,"Password");
 		
-		if ("root".equals(user) && "root".equals(password)){
+		if ("root".equals(user) && "ROOT".equals(password)){
 			JOptionPane.showMessageDialog(null,"login okay");}
 			else
 				JOptionPane.showMessageDialog(null,"login not okay");		

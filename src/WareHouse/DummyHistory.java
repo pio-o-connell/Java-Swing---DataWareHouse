@@ -10,19 +10,19 @@ import java.util.Date;
  ---------------------------------------------------------------------------------------*/
 public class DummyHistory {
 	private int historyId,itemId,amount;
-	private String description;
+	private String location;
 	private String supplier;
 	private Date deliveryDate;
 	
 	
-	public DummyHistory(int historyId,int itemId,int amount,String description,String supplier,Date deliverydate){
+	public DummyHistory(int historyId,int itemId,int amount,String location,String supplier,Date deliverydate){
 		this.historyId=historyId;
 		this.itemId=itemId;
 		this.deliveryDate=deliverydate;
-		this.description=description;
-		this.amount=amount;	
+		this.location=location;
+		this.amount=amount;    
 		this.supplier=supplier;
-		
+    
 	}
 	
 	
@@ -51,12 +51,12 @@ public class DummyHistory {
 		this.amount = amount;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getLocation() {
+		return location;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	public String getSupplier() {

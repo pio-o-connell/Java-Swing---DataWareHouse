@@ -16,20 +16,18 @@ public class Item implements Serializable {
 	
 
 	private int itemId,companyId,quantity,historyId;
-	private String itemName,Location;
+	private String itemName;
 	private ArrayList<history> historyItem = new ArrayList<history>();
 	Date date = new Date();
 	
 	
-	public Item(int itemId,int companyId,String Location,int quantity,String itemName,ArrayList<history> historyItem){
-		
-		
+	// Updated constructor: removed Location parameter
+	public Item(int itemId, int companyId, int quantity, String itemName, ArrayList<history> historyItem) {
 		this.itemId = itemId;
 		this.companyId = companyId;
 		this.quantity = quantity;
-		this.itemName= itemName;
-		this.historyItem=historyItem;
-		this.Location=Location;
+		this.itemName = itemName;
+		this.historyItem = historyItem;
 	}
 	
 	
@@ -83,13 +81,7 @@ public class Item implements Serializable {
 		this.quantity = quantity;
 	}
 	
-	public String getLocation(){
-		return Location;
-	}
-	
-	public void setLocation(String Location){
-		this.Location=Location;
-	}
+
 
 	public String getItemName() {
 		return itemName;

@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -68,11 +69,10 @@ public class DetailsPanel extends JPanel {
 
     // new
     static JTextField nameField = new JTextField(10);
-    static JTextField descriptionField = new JTextField(10);
+    static JTextField locationField = new JTextField(10);
     static JTextField supplierField = new JTextField(10);
     static JTextField deliveryField = new JTextField(10);
     static JTextField amountField = new JTextField(10);
-    static JTextField locationField = new JTextField(10);
 
     static JTextField reportDeliveryFrom = new JTextField(8);
     static JTextField reportDeliveryTo = new JTextField(8);
@@ -90,16 +90,15 @@ public class DetailsPanel extends JPanel {
         setBorder(BorderFactory.createTitledBorder("New Transaction/Item To Add:"));
         //	JLabel transactionLabel = new JLabel("Transaction");
         JLabel nameLabel = new JLabel("Item Name: ");
-        JLabel descriptionLabel = new JLabel("Description: ");
+        JLabel locationLabel = new JLabel("Location: ");
         JLabel supplierLabel = new JLabel("Supplier Name: ");
         JLabel amountLabel = new JLabel("Quantity: ");
         JLabel deliveryLabel = new JLabel("Delivery Date: ");
-        JLabel locationLabel = new JLabel("Location");
         JLabel deliveryFrom = new JLabel("From: ");
         JLabel deliveryTo = new JLabel("To: ");
 
         final int amount1, RecordNo, itemId1;
-        final String description, supplier, name, location;
+        final String location, supplier, name;
         final String date1;
 
         statusLabel.setForeground(Color.RED);
@@ -116,25 +115,24 @@ public class DetailsPanel extends JPanel {
                 statusLabel.setText("Add Transaction: Beginning ");
                 //		try{
                 String name = nameField.getText();
-                String description = descriptionField.getText();
+                String location = locationField.getText();
                 String supplier = supplierField.getText();
                 String delivery = (String) deliveryField.getText();
                 String amount = amountField.getText();
-                // 	String location = locationField.getText();
                 int quantity = Integer.parseInt(amount);
 
-                String text = Mainframe.historyRecordNo + ":  " + itemId + "  :" + quantity + "  :" + description + "   " + supplier + "   " + "   \n";
-                // history tempHistory=new history(Mainframe.historyRecordNo,itemId,quantity,description,supplier,delivery);
-                history tempHistory = new history(Mainframe.historyRecordNo, itemId, quantity, description, supplier, delivery);
+                String text = Mainframe.historyRecordNo + ":  " + itemId + "  :" + quantity + "  :" + location + "   " + supplier + "   " + "   \n";
+                // history tempHistory=new history(Mainframe.historyRecordNo,itemId,quantity,location,supplier,delivery);
+                history tempHistory = new history(Mainframe.historyRecordNo, itemId, quantity, location, supplier, delivery);
                 //	final ArrayList<history>currentItemHistoryPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
                 ArrayList<history> currentItemHistoryPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
                 currentItemHistoryPointer.add(tempHistory);
                 try {
                     Connection con;
-                    Class.forName("com.mysql.jdbc.Driver");
-                    con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/warehouse", "root", "root");
-                    Databases db = new Databases((java.sql.Connection) con);
-                    db.insertTransactionintoDatabase((java.sql.Connection) con, maindriver.Company11);
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", "ROOT");
+                    Databases db = new Databases(con);
+                    db.insertTransactionintoDatabase(con, maindriver.Company11);
                 } catch (ClassNotFoundException e3) {
                     statusLabel.setText("Insertion: Error ");
                     e3.printStackTrace();
@@ -165,25 +163,25 @@ public class DetailsPanel extends JPanel {
                 statusLabel.setText("Tx: Beginning ");
                 //		try{
                 String name = nameField.getText();
-                String description = descriptionField.getText();
+                String location = locationField.getText();
                 String supplier = supplierField.getText();
                 String delivery = (String) deliveryField.getText();
                 String amount = amountField.getText();
                 // 	String location = locationField.getText();
                 int quantity = Integer.parseInt(amount);
 
-                String text = Mainframe.historyRecordNo + ":  " + itemId + "  :" + quantity + "  :" + description + "   " + supplier + "   " + "   \n";
-                // history tempHistory=new history(Mainframe.historyRecordNo,itemId,quantity,description,supplier,delivery);
-                history tempHistory = new history(Mainframe.historyRecordNo, itemId, quantity, description, supplier, delivery);
+                String text = Mainframe.historyRecordNo + ":  " + itemId + "  :" + quantity + "  :" + location + "   " + supplier + "   " + "   \n";
+                // history tempHistory=new history(Mainframe.historyRecordNo,itemId,quantity,location,supplier,delivery);
+                history tempHistory = new history(Mainframe.historyRecordNo, itemId, quantity, location, supplier, delivery);
                 //	final ArrayList<history>currentItemHistoryPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
                 ArrayList<history> currentItemHistoryPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
                 currentItemHistoryPointer.add(tempHistory);
                 try {
                     Connection con;
-                    Class.forName("com.mysql.jdbc.Driver");
-                    con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/warehouse", "root", "root");
-                    Databases db = new Databases((java.sql.Connection) con);
-                    db.deleteHistoryTransintoDatabase((java.sql.Connection) con, maindriver.Company11);
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", "ROOT");
+                    Databases db = new Databases(con);
+                    db.deleteHistoryTransintoDatabase(con, maindriver.Company11);
                 } catch (ClassNotFoundException e3) {
                     statusLabel.setText("Deletion: Error ");
                     e3.printStackTrace();
@@ -211,18 +209,17 @@ public class DetailsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 statusLabel.setText("Creating.. ");
                 String name = nameField.getText();
-                String description = descriptionField.getText();
+                String location = locationField.getText();
                 String supplier = supplierField.getText();
                 String delivery = deliveryField.getText();
                 String amount = amountField.getText();
-                String location = locationField.getText();
-                String text = name + ":  " + description + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + location + location + "   \n";
+                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   \n";
                 try {
                     Connection con;
-                    Class.forName("com.mysql.jdbc.Driver");
-                    con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/warehouse", "root", "root");
-                    Databases db = new Databases((java.sql.Connection) con);
-                    db.insertNewItemTransintoDatabase((java.sql.Connection) con, maindriver.Company11);
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", "ROOT");
+                    Databases db = new Databases(con);
+                    db.insertNewItemTransintoDatabase(con, maindriver.Company11);
                 } catch (ClassNotFoundException e3) {
                     statusLabel.setText("Creation: Error ");
                     e3.printStackTrace();
@@ -245,12 +242,12 @@ public class DetailsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
 
                 String name = nameField.getText();
-                String description = descriptionField.getText();
+                String location = locationField.getText();
                 String supplier = supplierField.getText();
                 String delivery = deliveryField.getText();
                 String amount = amountField.getText();
 
-                String text = name + ":  " + description + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
+                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
 
                 fireDetailEvent(new DetailEvent(this, text));
             }
@@ -264,10 +261,10 @@ public class DetailsPanel extends JPanel {
 
                 try {
                     Connection con;
-                    Class.forName("com.mysql.jdbc.Driver");
-                    con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/warehouse", "root", "root");
-                    Databases db = new Databases((java.sql.Connection) con);
-                    db.deleteItemTransintoDatabase((java.sql.Connection) con, maindriver.Company11);
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", "ROOT");
+                    Databases db = new Databases(con);
+                    db.deleteItemTransintoDatabase(con, maindriver.Company11);
                 } catch (ClassNotFoundException e3) {
                     statusLabel.setText("Deletion: Error ");
                     e3.printStackTrace();
@@ -301,12 +298,12 @@ public class DetailsPanel extends JPanel {
                 }
 
                 String name = nameField.getText();
-                String description = descriptionField.getText();
+                String location = locationField.getText();
                 String supplier = supplierField.getText();
                 String delivery = deliveryField.getText();
                 String amount = amountField.getText();
 
-                String text = name + ":  " + description + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
+                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
 
                 fireDetailEvent(new DetailEvent(this, text));
             }
@@ -330,12 +327,12 @@ public class DetailsPanel extends JPanel {
                 }
 
                 String name = nameField.getText();
-                String description = descriptionField.getText();
+                String location = locationField.getText();
                 String supplier = supplierField.getText();
                 String delivery = deliveryField.getText();
                 String amount = amountField.getText();
 
-                String text = name + ":  " + description + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
+                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
 
                 fireDetailEvent(new DetailEvent(this, text));
             }
@@ -348,11 +345,11 @@ public class DetailsPanel extends JPanel {
                 statusLabel.setText("Backup Database: Beginning ");
                 try {
                     Connection con;
-                    Class.forName("com.mysql.jdbc.Driver");
-                    con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/warehouse", "root", "root");
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", "ROOT");
                     DatabaseBackup dbBackup;
-                    dbBackup = new DatabaseBackup((java.sql.Connection) con);
-                    dbBackup.backup((java.sql.Connection) con, maindriver.Company11);
+                    dbBackup = new DatabaseBackup(con);
+                    dbBackup.backup(con, maindriver.Company11);
 
                 } catch (ClassNotFoundException e3) {
                     statusLabel.setText("Backup Database: Error ");
@@ -368,12 +365,12 @@ public class DetailsPanel extends JPanel {
                 }
 
                 String name = nameField.getText();
-                String description = descriptionField.getText();
+                String location = locationField.getText();
                 String supplier = supplierField.getText();
                 String delivery = deliveryField.getText();
                 String amount = amountField.getText();
 
-                String text = name + ":  " + description + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
+                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
 
                 fireDetailEvent(new DetailEvent(this, text));
             }
@@ -386,10 +383,10 @@ public class DetailsPanel extends JPanel {
                 statusLabel.setText("Restore Database: Beginning ");
                 try {
                     Connection con;
-                    Class.forName("com.mysql.jdbc.Driver");
-                    con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/warehouse", "root", "root");
-                    Databases db = new Databases((java.sql.Connection) con);
-                    db.setup((java.sql.Connection) con, maindriver.Company11);
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", "ROOT");
+                    Databases db = new Databases(con);
+                    db.setup(con, maindriver.Company11);
                 } catch (ClassNotFoundException e3) {
 
                     e3.printStackTrace();
@@ -404,12 +401,12 @@ public class DetailsPanel extends JPanel {
                 }
 
                 String name = nameField.getText();
-                String description = descriptionField.getText();
+                String location = locationField.getText();
                 String supplier = supplierField.getText();
                 String delivery = deliveryField.getText();
                 String amount = amountField.getText();
 
-                String text = name + ":  " + description + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
+                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
 
                 fireDetailEvent(new DetailEvent(this, text));
             }
@@ -431,12 +428,12 @@ public class DetailsPanel extends JPanel {
                 }
 
                 String name = nameField.getText();
-                String description = descriptionField.getText();
+                String location = locationField.getText();
                 String supplier = supplierField.getText();
                 String delivery = deliveryField.getText();
                 String amount = amountField.getText();
 
-                String text = name + ":  " + description + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
+                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
 
                 fireDetailEvent(new DetailEvent(this, text));
             }
@@ -458,12 +455,12 @@ public class DetailsPanel extends JPanel {
                 }
 
                 String name = nameField.getText();
-                String description = descriptionField.getText();
+                String location = locationField.getText();
                 String supplier = supplierField.getText();
                 String delivery = deliveryField.getText();
                 String amount = amountField.getText();
 
-                String text = name + ":  " + description + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
+                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
 
                 fireDetailEvent(new DetailEvent(this, text));
             }
@@ -494,7 +491,7 @@ public class DetailsPanel extends JPanel {
 
         gc.gridx = 0;
         gc.gridy = 2;
-        topPanel.add(descriptionLabel, gc);
+        topPanel.add(locationLabel, gc);
 
         gc.gridx = 0;
         gc.gridy = 3;
@@ -511,7 +508,6 @@ public class DetailsPanel extends JPanel {
 
         gc.gridx = 0;
         gc.gridy = 6;
-        topPanel.add(locationLabel, gc);
 
         gc.gridx = 0;
         gc.gridy = 7;
@@ -527,7 +523,7 @@ public class DetailsPanel extends JPanel {
 
         gc.gridx = 1;
         gc.gridy = 2;
-        topPanel.add(descriptionField, gc);
+        topPanel.add(locationField, gc);
 
         gc.gridx = 1;
         gc.gridy = 3;
@@ -543,7 +539,6 @@ public class DetailsPanel extends JPanel {
 
         gc.gridx = 1;
         gc.gridy = 6;
-        topPanel.add(locationField, gc);
 
         gc.anchor = GridBagConstraints.FIRST_LINE_START;
 
@@ -555,13 +550,7 @@ public class DetailsPanel extends JPanel {
         gc.gridy = 20;
         topPanel.add(updateItemBtn, gc);
 
-        gc.gridx = 0;
-        gc.gridy = 21;
-        topPanel.add(locationLabel, gc);
-
-        gc.gridx = 1;
-        gc.gridy = 21;
-        topPanel.add(locationField, gc);
+        // Removed locationLabel and locationField (no longer used)
         gc.gridx = 0;
         gc.gridy = 24;
         topPanel.add(updateBtn, gc);
@@ -597,10 +586,8 @@ public class DetailsPanel extends JPanel {
 
         gcc.gridx = 0;
         gcc.gridy = 1;
-        centerPanel.add(spacerLabel, gcc);
-
-        gcc.gridx = 0;
-        gcc.gridy = 2;
+            // topPanel.add(locationLabel, gc);
+            // topPanel.add(locationField, gc);
 
         centerPanel.add(backupBtn, gcc);
 

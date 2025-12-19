@@ -92,51 +92,31 @@ public class TableWindow1 extends JPanel {
         		  return false; //Cancel the editing of any cell
         		  }
            };
-           ///////////////////here
-  // TableWindow2.table3=0;
-        table.setRowSorter(sorter);
-        table.setPreferredScrollableViewportSize(new Dimension(500, 200)); 
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);       
         table.getSelectionModel().addListSelectionListener(
-                new ListSelectionListener() {
-                    public void valueChanged(ListSelectionEvent event) {
-                        int viewRow = table.getSelectedRow();
-                        if (viewRow < 0) {
-                            statusText.setText("");
-                        } else {
-                            int modelRow =  table.convertRowIndexToModel(viewRow);
-                            Mainframe.companyIndex=modelRow;
-                            
-                   
-                            
-                            statusText.setText( String.format(" Company selected: %s" + "   Selected Row in model: %d.",         
-                            
-                            		
-                            maindriver.Company11.get(modelRow).getCompanyName(),modelRow));
-                         
-                            
-                    // clear the table2
-                            for (int i = 0; i < model2[0].getRowCount(); i++) {
-                                for (int j = 0; j < model2[0].getColumnCount(); j++) {
-                                    model2[0].setValueAt("", i, j);
-                                }
+            new ListSelectionListener() {
+                public void valueChanged(ListSelectionEvent event) {
+                    int viewRow = table.getSelectedRow();
+                    if (viewRow < 0) {
+                        statusText.setText("");
+                    } else {
+                        int modelRow = table.convertRowIndexToModel(viewRow);
+                        Mainframe.companyIndex = modelRow;
+                        statusText.setText(String.format(" Company selected: %s   Selected Row in model: %d.",
+                                maindriver.Company11.get(modelRow).getCompanyName(), modelRow));
+                        // Filter items by companyId
+                        int selectedCompanyId = maindriver.Company11.get(modelRow).getCompanyId();
+                        ArrayList<Item> filteredItems = new ArrayList<>();
+                        for (Item item : items) {
+                            if (item.getCompanyId() == selectedCompanyId) {
+                                filteredItems.add(item);
                             }
-                            
-                            
-                            
-                            ArrayList<Item>currentItemPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems();
-                            int listSize = currentItemPointer.size();
-                            for(int i=0;i<listSize;i++){
-                            	table2.setValueAt((Object)currentItemPointer.get(i).getItemId(), i, 0);
-                          // 	table2.setValueAt((Object)currentItemPointer.get(i).getCompanyId(), i, 1);
-                            	table2.setValueAt((Object)currentItemPointer.get(i).getItemName(), i, 1);
-                            	table2.setValueAt((Object)currentItemPointer.get(i).getQuantity(), i, 2);
-                            	table2.setValueAt((Object)currentItemPointer.get(i).getLocation(), i, 3);
-                            }
-   
-                        }	
+                        }
+                        model2[0] = new MyTableModel2(filteredItems, 0);
+                        table2.setModel(model2[0]);
+                        sorter2.setModel(model2[0]);
                     }
                 }
+            }
         );
 
         JScrollPane scrollPane = new JScrollPane(table);
@@ -176,25 +156,40 @@ public class TableWindow1 extends JPanel {
         SpringUtilites.makeCompactGrid(form, 2, 2, 6, 6, 6, 6);
      //  took this out  add(form);
     
-          model2[0] = new MyTableModel2(companies.get(0).getItems(),0);
+          // Only show items for the first company on startup
+          int firstCompanyId = companies.get(0).getCompanyId();
+          ArrayList<Item> firstCompanyItems = new ArrayList<>();
+          for (Item item : items) {
+              if (item.getCompanyId() == firstCompanyId) {
+                  firstCompanyItems.add(item);
+              }
+          }
+          model2[0] = new MyTableModel2(firstCompanyItems, 0);
           sorter2 = new TableRowSorter<MyTableModel2>(model2[0]);
           table2 = new JTable(model2[0]){
-  			public boolean isCellEditable(int rowIndex, int colIndex) {
-          		  return FALSE; //Disallow the editing of any cell
-          		  }
-             };
+              public boolean isCellEditable(int rowIndex, int colIndex) {
+                  return FALSE; //Disallow the editing of any cell
+              }
+          };
           table2.setRowSorter(sorter2);
           table2.setPreferredScrollableViewportSize(new Dimension(500, 200));
           table2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
           table2.getSelectionModel().addListSelectionListener(
                   new ListSelectionListener() {
                       public void valueChanged(ListSelectionEvent event) {
+                          if (event.getValueIsAdjusting()) {
+                              return;
+                          }
                           int viewRow = table2.getSelectedRow();
                           if (viewRow < 0) {
                               //Selection got filtered away.
                               statusText2.setText("");
                           } else {
                               int modelRow = table2.convertRowIndexToModel(viewRow);
+                              if (modelRow < 0 || modelRow >= maindriver.Company11.get(Mainframe.companyIndex).getItems().size()) {
+                                  statusText2.setText("");
+                                  return;
+                              }
                               Mainframe.itemIndex=modelRow;
                               
                               statusText2.setText(
@@ -202,11 +197,11 @@ public class TableWindow1 extends JPanel {
                                       "Selected Row in model: %d.", 
                                       maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemName(), modelRow));
                              
-                              	//clear table 3
-                              // clear the table2
-                              for (int i = 0; i < TableWindow2.nmrRowsTable3; i++) {
-                         //   	  TableWindow2.model.setValueAt(new Date(68,03,03), i, 0);
-                                  for (int j = 0; j < 4; j++) {
+							// clear table 3
+                              int rowsToClear = TableWindow2.model.getRowCount();
+                              int colsToClear = TableWindow2.model.getColumnCount();
+                              for (int i = 0; i < rowsToClear; i++) {
+                                  for (int j = 0; j < colsToClear; j++) {
                                       TableWindow2.model.setValueAt(" ", i, j);
                                   }
                               }
@@ -215,24 +210,24 @@ public class TableWindow1 extends JPanel {
                               
                               
                               
-                              		 ArrayList<history>currentHistoryPointer=maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
-                              		 int listSize=currentHistoryPointer.size();
-                              		 for(int i=0;i<listSize;i++){
-                              	//		TableWindow2.table3.setValueAt((Object)currentHistoryPointer.get(i).getHistoryId(), i, 0);
-                              	//		TableWindow2.table3.setValueAt((Object)currentHistoryPointer.get(i).getItemId(), i, 1);
-                              		   	TableWindow2.table3.setValueAt((Object)currentHistoryPointer.get(i).getDeliveryDate(), i, 0);
-                              		   	TableWindow2.table3.setValueAt((Object)currentHistoryPointer.get(i).getDescription(), i, 1);
-                              		   	TableWindow2.table3.setValueAt((Object)currentHistoryPointer.get(i).getAmount(), i, 2);
-                              		    TableWindow2.table3.setValueAt((Object)currentHistoryPointer.get(i).getSupplier(), i, 3);
-                              		    DetailsPanel.nameField.setText(maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemName());
-                              		    DetailsPanel.descriptionField.setText(currentHistoryPointer.get(i).getDescription());
-                              		    DetailsPanel.deliveryField.setText(currentHistoryPointer.get(i).getDeliveryDate());
-                              		    DetailsPanel.amountField.setText(String.valueOf(currentHistoryPointer.get(i).getAmount()));
-                              		    DetailsPanel.supplierField.setText(currentHistoryPointer.get(i).getSupplier());
-                              		    DetailsPanel.locationField.setText(maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getLocation());
-                              		    DetailsPanel.reportDeliveryFrom.setText(currentHistoryPointer.get(i).getDeliveryDate());
-                              		    DetailsPanel.reportDeliveryTo.setText(currentHistoryPointer.get(i).getDeliveryDate());
-                              		 }
+                                     ArrayList<history>currentHistoryPointer=maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
+                                     int listSize=currentHistoryPointer.size();
+                                     for(int i=0;i<listSize;i++){
+                                         // Write directly to the model (view indices can be invalid when sorting/filtering).
+                                         TableWindow2.model.setValueAt((Object)currentHistoryPointer.get(i).getDeliveryDate(), i, 0);
+                                         TableWindow2.model.setValueAt((Object)currentHistoryPointer.get(i).getLocation(), i, 1);
+                                         TableWindow2.model.setValueAt((Object)currentHistoryPointer.get(i).getAmount(), i, 2);
+                                         TableWindow2.model.setValueAt((Object)currentHistoryPointer.get(i).getSupplier(), i, 3);
+                                     }
+                                     if (listSize > 0) {
+                                         DetailsPanel.nameField.setText(maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemName());
+                                         DetailsPanel.locationField.setText(currentHistoryPointer.get(0).getLocation());
+                                         DetailsPanel.deliveryField.setText(currentHistoryPointer.get(0).getDeliveryDate());
+                                         DetailsPanel.amountField.setText(String.valueOf(currentHistoryPointer.get(0).getAmount()));
+                                         DetailsPanel.supplierField.setText(currentHistoryPointer.get(0).getSupplier());
+                                         DetailsPanel.reportDeliveryFrom.setText(currentHistoryPointer.get(0).getDeliveryDate());
+                                         DetailsPanel.reportDeliveryTo.setText(currentHistoryPointer.get(0).getDeliveryDate());
+                                     }
                               	
                               			
                               		TableWindow2.nmrRowsTable3 = listSize;
@@ -415,31 +410,25 @@ public class TableWindow1 extends JPanel {
     
   
     class MyTableModel2 extends AbstractTableModel {
-    	private static final long serialVersionUID = 1L;
-        private String[] columnNames = {"Item Id",
-        								"Item Name",
-        								"Total(s)",
-                                        "Location"
-                                        };
+        private static final long serialVersionUID = 1L;
+        private String[] columnNames = {
+            "Item Name",
+            "Total(s)"
+        };
         @SuppressWarnings("deprecation")
 
         private ArrayList<Item> items11;
-        private Object[][]data;
-        
-        	public MyTableModel2(ArrayList<Item> items11,int index1){
-        		this.items11=items11;
-        		int index=index1;
-        		int listSize=items11.size();
-        		data=new Object[listSize][4];
-        		
-        		for(int i=0;i<listSize;i++){
-        			data[i][0]=(Object)items11.get(i).getItemId();
-        			data[i][1]=(Object)items11.get(i).getItemName();
-        			data[i][2]=(Object)items11.get(i).getQuantity();
-        			data[i][3]=(Object)items11.get(i).getLocation();
-        			
-        		}
-        	}
+        private Object[][] data;
+
+        public MyTableModel2(ArrayList<Item> items11, int index1) {
+            this.items11 = items11;
+            int listSize = items11.size();
+            data = new Object[listSize][2];
+            for (int i = 0; i < listSize; i++) {
+                data[i][0] = items11.get(i).getItemName();
+                data[i][1] = items11.get(i).getQuantity();
+            }
+        }
 
         public int getColumnCount() {
             return columnNames.length;
@@ -457,43 +446,23 @@ public class TableWindow1 extends JPanel {
             return data[row][col];
         }
 
-        /*
-         * JTable uses this method to determine the default renderer/
-         * editor for each cell.  If we didn't implement this method,
-         * then the last column would contain text ("true"/"false"),
-         * rather than a check box.
-         */
         public Class getColumnClass(int c) {
             return getValueAt(0, c).getClass();
         }
 
-        /*
-         * Don't need to implement this method unless your table's
-         * editable.
-         */
         public boolean isCellEditable(int row, int col) {
-            //Note that the data/cell address is constant,
-            //no matter where the cell appears onscreen.
-            if (col < 2) {
-                return false;
-            } else {
-                return true;
-            }
+            // Only allow editing for the Total(s) column, if needed
+            return col == 1;
         }
-        
-        public void updateModel(){
-        	final ArrayList<Item>tableItemPointer =maindriver.Company11.get(Mainframe.companyIndex).getItems();
-    		
-    		int listSize=tableItemPointer.size();
-    		data=new Object[listSize][4];
-    		
-    		for(int i=0;i<listSize;i++){
-    			data[i][0]=(Object)tableItemPointer.get(i).getItemId();
-    			data[i][1]=(Object)tableItemPointer.get(i).getItemName();
-    			data[i][2]=(Object)tableItemPointer.get(i).getQuantity();
-    			data[i][3]=(Object)tableItemPointer.get(i).getLocation();
-    			
-    		}
+
+        public void updateModel() {
+            final ArrayList<Item> tableItemPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems();
+            int listSize = tableItemPointer.size();
+            data = new Object[listSize][2];
+            for (int i = 0; i < listSize; i++) {
+                data[i][0] = tableItemPointer.get(i).getItemName();
+                data[i][1] = tableItemPointer.get(i).getQuantity();
+            }
         }
 
         /*

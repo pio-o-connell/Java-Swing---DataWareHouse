@@ -1,7 +1,9 @@
 package WareHouse;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,9 +11,6 @@ import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
 
 /*---------------------------------------------------------------------------------------
 /*
@@ -36,11 +35,11 @@ public class maindriver{
 		
 		
 	//	Company11 = dummyclass.getCompany11(); // build the data structure
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection con=(Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/warehouse","root","root");
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC","root","ROOT");
 		
 /*		Class.forName("com.mysql.jdbc.Driver");
-		Connection con= (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/warehouse","root","root");
+		Connection con= (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/warehouse","root","ROOT");
 		PreparedStatement statement = (PreparedStatement) con.prepareStatement("select * from company ");
 		ResultSet result = statement.executeQuery();
 		while(result.next()){
@@ -76,7 +75,7 @@ public class maindriver{
 				String user = JOptionPane.showInputDialog(null,"User"); // dialog requests username
 				String password = JOptionPane.showInputDialog(null,"Password"); // dialog requests password
 				
-				if ("root".equals(user) && "root".equals(password)){
+				if ("root".equals(user) && "ROOT".equals(password)){
 					JOptionPane.showMessageDialog(null,"login okay");
 					JFrame frame;
 					try {

@@ -2,6 +2,7 @@ package WareHouse;
 
 //------------------------------------------------------------------//
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,19 +56,25 @@ public class DatabaseRestore {
                     System.out.println("\n history_id \t " + historyResult.getInt(1));
                     System.out.println("item_id " + historyResult.getInt(2));
                     System.out.println("amount" + historyResult.getInt(3));
-                    System.out.println("description" + historyResult.getString(4));
-                    System.out.println("Supplier" + historyResult.getString(5));
+                    System.out.println("location" + historyResult.getString(4));
+                        // System.out.println("Supplier" + historyResult.getString(5));
                     System.out.println("Delivery Date" + historyResult.getString(6));
                 }
                 System.out.println("Item-ID" + itemsResult.getInt(1));
 
-                Item11.add(new Item(itemsResult.getInt(1), itemsResult.getInt(2), itemsResult.getString(5), itemsResult.getInt(3), itemsResult.getString(4), history11));
+                // Updated Item constructor: (int itemId, int companyId, int quantity, String itemName, ArrayList<history> historyItem)
+                Item11.add(new Item(
+                    itemsResult.getInt(1), // itemId
+                    itemsResult.getInt(2), // companyId
+                    itemsResult.getInt(3), // quantity
+                    itemsResult.getString(4), // itemName
+                    history11
+                ));
 
                 System.out.println("\n Item id" + itemsResult.getInt(1));
                 System.out.println("\t Company Id" + itemsResult.getInt(2));
                 System.out.println("\t Quantity" + itemsResult.getInt(3));
                 System.out.println("\t ItemName" + itemsResult.getString(4));
-                System.out.println("\t Location" + itemsResult.getString(5));
 
             }
             // Create the users - only one

@@ -54,7 +54,7 @@ public class Serialized {
 			ObjectInputStream os = new ObjectInputStream(fileStream);
 			
 			company11 =(ArrayList<Company> )os.readObject();
-			System.out.println("Desc"+(String) company11.get(0).getItems().get(0).getHistory().get(0).getDescription());
+			System.out.println("Location"+(String) company11.get(0).getItems().get(0).getHistory().get(0).getLocation());
 	
 			
 			os.close();

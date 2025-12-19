@@ -65,28 +65,34 @@ public class TableWindow2 extends JPanel {
         table3.getSelectionModel().addListSelectionListener(
                 new ListSelectionListener() {
                     public void valueChanged(ListSelectionEvent event) {
+                        if (event.getValueIsAdjusting()) {
+                            return;
+                        }
                         int viewRow = table3.getSelectedRow();
                         if (viewRow < 0) {
                             //Selection got filtered away.
                             statusText3.setText("");
             //----                detailTable=1;			-------//
                         } else {
-                            int modelRow = 
-                                table3.convertRowIndexToModel(viewRow);
+                            if (viewRow >= table3.getRowCount()) {
+                                statusText3.setText("");
+                                return;
+                            }
+							int modelRow = table3.convertRowIndexToModel(viewRow);
                             statusText3.setText(
                                 String.format(" History displayed for Selected Row in view: %d. " +
                                     "Selected Row in model: %d.", 
                                     viewRow, modelRow));
                     //        DetailsPanel.nameField.setText(maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemName());
-                            Mainframe.historyIndex=viewRow;
-                            DetailsPanel.descriptionField.setText(
-                            maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory().get(Mainframe.historyIndex).getDescription());
-                            DetailsPanel.descriptionField.setText(
-                            		maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory().get(Mainframe.historyIndex).getDescription());
-                            DetailsPanel.amountField.setText(String.valueOf(
-                            		maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory().get(Mainframe.historyIndex).getAmount()));
-                            DetailsPanel.supplierField.setText(
-                            		maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory().get(Mainframe.historyIndex).getSupplier());
+							ArrayList<history> historyList = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
+							if (modelRow < 0 || modelRow >= historyList.size()) {
+								statusText3.setText("");
+								return;
+							}
+							Mainframe.historyIndex=modelRow;
+                            DetailsPanel.locationField.setText(historyList.get(Mainframe.historyIndex).getLocation());
+							DetailsPanel.amountField.setText(String.valueOf(historyList.get(Mainframe.historyIndex).getAmount()));
+							DetailsPanel.supplierField.setText(historyList.get(Mainframe.historyIndex).getSupplier());
                             		
                             		
                   	//	    DetailsPanel.descriptionField.setText(currentHistoryPointer.get(i).getDescription());
@@ -159,10 +165,10 @@ public class TableWindow2 extends JPanel {
     class MyTableModel extends AbstractTableModel {
     	private static final long serialVersionUID = 1L;
         private String[] columnNames = {
-                                        "Delivery Date",
-                                        "Description",
-                                        "Quantity",
-                                        "Supplier"};
+                        "Delivery Date",
+                        "Location",
+                        "Quantity",
+                        "Supplier"};
         private ArrayList<history> history11;
         
         @SuppressWarnings("deprecation")
@@ -172,14 +178,14 @@ public class TableWindow2 extends JPanel {
         		this.history11=history;
         		int index=index1;
         		int listSize = history11.size();
-        		data = new Object[listSize][6];
+                data = new Object[listSize][4];
         		nmrRowsTable3=listSize;
             	for(int i = 0; i < listSize; i++)
             	{
             //		data[i][0]=(Object)history11.get(i).getHistoryId();
             //		data[i][1]=(Object)history11.get(i).getItemId();
             		data[i][0]=(Object)history11.get(i).getDeliveryDate();
-            		data[i][1]=(Object)history11.get(i).getDescription();
+                    data[i][1]=(Object)history11.get(i).getLocation();
             		data[i][2]=(Object)history11.get(i).getAmount();
             		data[i][3]=(Object)history11.get(i).getSupplier();
             	}
@@ -199,7 +205,7 @@ public class TableWindow2 extends JPanel {
        // 		data2[0][i]=(Object)history11.get(i).getHistoryId();
        // 		data2[i][1]=(Object)history11.get(i).getItemId();
         		data2[i][0]=(Object)history11.get(i).getDeliveryDate();
-        		data2[i][1]=(Object)history11.get(i).getDescription();
+                data2[i][1]=(Object)history11.get(i).getLocation();
         		data2[i][2]=(Object)history11.get(i).getAmount();
         		data2[i][3]=(Object)history11.get(i).getSupplier();
         	}
