@@ -133,7 +133,7 @@ public class DatabaseBackup {
                     statement.executeUpdate();
 
                     for (int k = 0; k < Company11.get(i).getItems().get(j).getHistory().size(); k++) {
-                        statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(HISTORY_ID,ITEM_id,AMOUNT,LOCATION,SUPPLIER,DELIVERY_DATE)  VALUES  (?,?,?,?,?,?)");
+                        statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(HISTORY_ID,ITEM_id,AMOUNT,LOCATION,Supplier,DELIVERY_DATE)  VALUES  (?,?,?,?,?,?)");
                         statement.setInt(1, Company11.get(i).getItems().get(j).getHistory().get(k).getHistoryId());
                         statement.setInt(2, Company11.get(i).getItems().get(j).getItemId());
                         statement.setInt(3, Company11.get(i).getItems().get(j).getHistory().get(k).getAmount());

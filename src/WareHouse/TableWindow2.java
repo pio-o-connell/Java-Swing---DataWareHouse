@@ -41,9 +41,12 @@ public class TableWindow2 extends JPanel {
     public static MyTableModel model;
 
     public TableWindow2(ArrayList<Item> items,ArrayList<Company> companies,ArrayList<history> history11) {
-  //  	private static final long serialVersionUID = 1L;
-    	
         super();
+        setOpaque(true);
+        setBackground(new java.awt.Color(255, 240, 240));
+        setMinimumSize(new java.awt.Dimension(300, 200));
+        setPreferredSize(new java.awt.Dimension(400, 300));
+        //  private static final long serialVersionUID = 1L;
         this.history11 = history11;
         this.items11 = items;
         this.companies11 = companies;
@@ -257,10 +260,15 @@ public class TableWindow2 extends JPanel {
          * data can change.
          */
         public void setValueAt(Object value, int row, int col) {
-            if (row >= 0 && row < data.length && col >= 0 && col < data[0].length) {
-                data[row][col] = value;
-                fireTableCellUpdated(row, col);
-            }
+            if (data == null || data.length == 0) return;
+            if (row < 0 || row >= data.length) return;
+            if (data[0] == null) return;
+            // Defensive: check all rows for null and correct length
+            if (col < 0) return;
+            if (row >= data.length) return;
+            if (data[row] == null || col >= data[row].length) return;
+            data[row][col] = value;
+            fireTableCellUpdated(row, col);
         }
 
        private void printDebugData() {
@@ -281,6 +289,5 @@ public class TableWindow2 extends JPanel {
     	   
        }
     }
-
 }
 

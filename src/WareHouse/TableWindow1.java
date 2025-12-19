@@ -68,9 +68,13 @@ public class TableWindow1 extends JPanel {
     
     public TableWindow1(ArrayList<Item> items,ArrayList<Company> companies,ArrayList<history> history11)
     {
-//    	private static final long serialVersionUID = 1L;
-    	super();
-    	this.history = history11;
+        super();
+        setOpaque(true);
+        setBackground(new java.awt.Color(240, 240, 255));
+        setMinimumSize(new java.awt.Dimension(300, 200));
+        setPreferredSize(new java.awt.Dimension(400, 300));
+        //     private static final long serialVersionUID = 1L;
+        this.history = history11;
         this.items = items;
         this.companies = companies;
      
@@ -114,6 +118,30 @@ public class TableWindow1 extends JPanel {
                         model2[0] = new MyTableModel2(filteredItems, 0);
                         table2.setModel(model2[0]);
                         sorter2.setModel(model2[0]);
+                        // Update DetailsPanel fields for first item of selected company
+                        if (!filteredItems.isEmpty()) {
+                            Item firstItem = filteredItems.get(0);
+                            String itemName = firstItem.getItemName();
+                            java.util.List<history> histories = firstItem.getHistory();
+                            if (histories != null && !histories.isEmpty()) {
+                                history firstHistory = histories.get(0);
+                                String supplier = firstHistory.getSupplier();
+                                String location = firstHistory.getLocation();
+                                String delivery = firstHistory.getDeliveryDate();
+                                int amount = firstHistory.getAmount();
+                                DetailsPanel.nameField.setText(itemName);
+                                DetailsPanel.locationField.setText(location);
+                                DetailsPanel.supplierField.setText(supplier);
+                                DetailsPanel.deliveryField.setText(delivery);
+                                DetailsPanel.amountField.setText(String.valueOf(amount));
+                            } else {
+                                DetailsPanel.nameField.setText(itemName);
+                                DetailsPanel.locationField.setText("");
+                                DetailsPanel.supplierField.setText("");
+                                DetailsPanel.deliveryField.setText("");
+                                DetailsPanel.amountField.setText(String.valueOf(firstItem.getQuantity()));
+                            }
+                        }
                     }
                 }
             }
@@ -228,6 +256,13 @@ public class TableWindow1 extends JPanel {
                                          DetailsPanel.reportDeliveryFrom.setText(currentHistoryPointer.get(0).getDeliveryDate());
                                          DetailsPanel.reportDeliveryTo.setText(currentHistoryPointer.get(0).getDeliveryDate());
                                      }
+                                         // If no history, fill with item info
+                                         Item selectedItem = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex);
+                                         DetailsPanel.nameField.setText(selectedItem.getItemName());
+                                         DetailsPanel.locationField.setText("");
+                                         DetailsPanel.deliveryField.setText("");
+                                         DetailsPanel.amountField.setText(String.valueOf(selectedItem.getQuantity()));
+                                         DetailsPanel.supplierField.setText("");
                               	
                               			
                               		TableWindow2.nmrRowsTable3 = listSize;

@@ -29,31 +29,31 @@ public class GenerateReport {
 	Date dateTo;
 	
 	GenerateReport(ArrayList<Company> Company) throws IOException{
-		this.Company11 = Company11;
+		this.Company = Company;
 		File outputFile = new File("Report-JavaProject.txt");
 		FileWriter out = new FileWriter(outputFile);
 		PrintWriter outputStream = new PrintWriter(out);
 		
-		for(int i=0;i<Company11.size();i++){ // will be only one company here
+		for(int i=0;i<Company.size();i++){ // will be only one company here
 			
 			Date date = new Date();
 			outputStream.println("Date"+date.toString());
-			outputStream.print("Company Name: "+Company11.get(i).getCompanyName());
-			outputStream.println("\tCompany Id: "+Company11.get(i).getCompanyId());
+			outputStream.print("Company Name: "+Company.get(i).getCompanyName());
+			outputStream.println("\tCompany Id: "+Company.get(i).getCompanyId());
 			
 			
-			for(int j=0;j<Company11.get(i).getItems().size();j++){
+			for(int j=0;j<Company.get(i).getItems().size();j++){
 				outputStream.println("Item Name: \t\t\tItem Id: \t\t Item Quantity: \t\tItem Location: ");
-				outputStream.println(Company11.get(i).getItems().get(j).getItemName()+"\t\t\t " +Company11.get(i).getItems().get(j).getItemId()+
-								"\t\t\t" +Company11.get(i).getItems().get(j).getQuantity());
+				outputStream.println(Company.get(i).getItems().get(j).getItemName()+"\t\t\t " +Company.get(i).getItems().get(j).getItemId()+
+								"\t\t\t" +Company.get(i).getItems().get(j).getQuantity());
 
 				outputStream.println("\t\t\tHistory Location: \t\t\tHistoryId:  \t\t Amount: \t\tSupplier: \t\tDelivery Date: ");
-	    		for(int k=0;k<Company11.get(i).getItems().get(j).getHistory().size();k++){
+	    		for(int k=0;k<Company.get(i).getItems().get(j).getHistory().size();k++){
 	    			
-					outputStream.println("\t\t\t "+ Company11.get(i).getItems().get(j).getHistory().get(k).getLocation()+"\t\t\t "+ Company11.get(i).getItems().get(j).getHistory().get(k).getHistoryId()+
-	    					"\t\t"+Company11.get(i).getItems().get(j).getHistory().get(k).getAmount()+
-	    					"\t\t  "+ Company11.get(i).getItems().get(j).getHistory().get(k).getSupplier()+
-	    					"\t\t "+Company11.get(i).getItems().get(j).getHistory().get(k).getDeliveryDate()
+					outputStream.println("\t\t\t "+ Company.get(i).getItems().get(j).getHistory().get(k).getLocation()+"\t\t\t "+ Company.get(i).getItems().get(j).getHistory().get(k).getHistoryId()+
+	    					"\t\t"+Company.get(i).getItems().get(j).getHistory().get(k).getAmount()+
+	    					"\t\t  "+ Company.get(i).getItems().get(j).getHistory().get(k).getSupplier()+
+	    					"\t\t "+Company.get(i).getItems().get(j).getHistory().get(k).getDeliveryDate()
 	    					);
 
 	    			
@@ -75,13 +75,13 @@ public class GenerateReport {
 		this.dateTo = (Date) dateTo.clone();
 		
 		Date currentDate = new Date();
-		this.Company11 = Company11;
+		this.Company = Company;
 		// gets histories of all items transacted within the dates
-		for(int i=0;i<Company11.size();i++){
-			for(int j=0;j<Company11.get(i).getItems().size();j++){
-				for(int k=0;k<Company11.get(i).getItems().get(j).getHistory().size();k++){
+		for(int i=0;i<Company.size();i++){
+			for(int j=0;j<Company.get(i).getItems().size();j++){
+				for(int k=0;k<Company.get(i).getItems().get(j).getHistory().size();k++){
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-					String deliveryDate = Company11.get(i).getItems().get(j).getHistory().get(k).getDeliveryDate();
+					String deliveryDate = Company.get(i).getItems().get(j).getHistory().get(k).getDeliveryDate();
 					if (deliveryDate == null) {
 						continue;
 					}
@@ -102,7 +102,7 @@ public class GenerateReport {
 						indexer.add(index);
 						
 						System.out.println("Current date"+index.getDated());
-						System.out.println("Date : "+ Company11.get(i).getItems().get(j).getHistory().get(k).getDeliveryDate());
+						System.out.println("Date : "+ Company.get(i).getItems().get(j).getHistory().get(k).getDeliveryDate());
 						System.out.println("i,,j,k,date: "+indexer.get(i).getI()+
 								indexer.get(i).getJ()+
 						indexer.get(i).getK()+
@@ -121,7 +121,7 @@ public class GenerateReport {
 			int j = indexer.get(l).getJ();
 			int k = indexer.get(l).getK();
 			System.out.println("i,j,k"+i+j+k);
-			System.out.println("Sorted Date : "+ Company11.get(i).getItems().get(j).getHistory().get(k).getDeliveryDate());
+			System.out.println("Sorted Date : "+ Company.get(i).getItems().get(j).getHistory().get(k).getDeliveryDate());
 			
 			
 			

@@ -1,6 +1,9 @@
+
 package WareHouse;
+import javax.swing.BoxLayout;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -26,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
+import javax.swing.BoxLayout;
 
 //import com.mysql.jdbc.Connection;
 
@@ -63,577 +67,153 @@ import javax.swing.event.EventListenerList;
 // with JTextStrings.
 /*-------------------------------------------------------------------------------------------------------------------*/
 public class DetailsPanel extends JPanel {
+            /**
+             * Set all main fields in the DetailsPanel.
+             * Call this after reading values from the database.
+             */
+            public void setFields(String name, String location, String supplier, String delivery, String amount) {
+            System.out.println("[DetailsPanel.setFields] name=" + name + ", location=" + location + ", supplier=" + supplier + ", delivery=" + delivery + ", amount=" + amount);
+            nameField.setText(name);
+            locationField.setText(location);
+            supplierField.setText(supplier);
+            deliveryField.setText(delivery);
+            amountField.setText(amount);
+            }
+       
+    // Field to display current selected company
+    static JTextField currentCompanyField = new JTextField(15);
 
+    // Add a setter for currentCompanyField
+    public void setCurrentCompanyField(String name) {
+        currentCompanyField.setText(name);
+    }
+ 
     private static final long serialVersionUID = 1L;
     private EventListenerList listenerList = new EventListenerList();
 
     // new
-    static JTextField nameField = new JTextField(10);
-    static JTextField locationField = new JTextField(10);
-    static JTextField supplierField = new JTextField(10);
-    static JTextField deliveryField = new JTextField(10);
-    static JTextField amountField = new JTextField(10);
+        static JTextField nameField = new JTextField("Name", 10);
+        static JTextField locationField = new JTextField("Location", 10);
+        static JTextField supplierField = new JTextField("Supplier", 10);
+        static JTextField deliveryField = new JTextField("Delivery", 10);
+        static JTextField amountField = new JTextField("Amount", 10);
 
     static JTextField reportDeliveryFrom = new JTextField(8);
     static JTextField reportDeliveryTo = new JTextField(8);
 
     static JLabel statusLabel = new JLabel("Status: Waiting ");
+
+    // Define all required labels
+    static JLabel txCompanyNameLabel = new JLabel("Transaction Company Name:");
+    static JLabel currentCompanyLabel = new JLabel("Current Company:");
+    static JLabel nameLabel = new JLabel("Service Name:");
+    static JLabel providerNameLabel = new JLabel("Supplier:");
+    static JLabel locationLabel = new JLabel("Location:");
+    static JLabel deliveryLabel = new JLabel("Date:");
+    static JLabel quantityLabel = new JLabel("Quantity:");
     static JLabel spacerLabel = new JLabel("                ");
 
+    // Define all required buttons
+    static JButton addBtn = new JButton("Add");
+    static JButton removeBtn = new JButton("Remove");
+    static JButton updateBtn = new JButton("Update");
+    static JButton updateItemBtn = new JButton("Update Item");
+    static JButton deleteBtn = new JButton("Delete");
+    static JButton itemReportBtn = new JButton("Item Report");
+    static JButton itemDeliveredReportBtn = new JButton("Delivered Report");
+    static JButton backupBtn = new JButton("Backup");
+    static JButton restoreBtn = new JButton("Restore");
+    static JButton serialBackupBtn = new JButton("Serial Backup");
+    static JButton serialRestoreBtn = new JButton("Serial Restore");
+
+
     public DetailsPanel() {
-        Dimension size = getPreferredSize();
-        size.width = 270;
-        //	size.height=100;
-
-        setPreferredSize(size);
-
-        setBorder(BorderFactory.createTitledBorder("New Transaction/Item To Add:"));
-        //	JLabel transactionLabel = new JLabel("Transaction");
-        JLabel nameLabel = new JLabel("Item Name: ");
-        JLabel locationLabel = new JLabel("Location: ");
-        JLabel supplierLabel = new JLabel("Supplier Name: ");
-        JLabel amountLabel = new JLabel("Quantity: ");
-        JLabel deliveryLabel = new JLabel("Delivery Date: ");
-        JLabel deliveryFrom = new JLabel("From: ");
-        JLabel deliveryTo = new JLabel("To: ");
-
-        final int amount1, RecordNo, itemId1;
-        final String location, supplier, name;
-        final String date1;
-
-        statusLabel.setForeground(Color.RED);
-
-        //	final int listSize = currentItemHistoryPointer.size();
-        final int itemId = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemId();
-        Mainframe.historyRecordNo++;
-
-        JButton addBtn = new JButton("Add Tx");
-        //  tempHistory=new history(1,1,1,"test","test",new Date(99, 0, 99));
-
-        addBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                statusLabel.setText("Add Transaction: Beginning ");
-                //		try{
-                String name = nameField.getText();
-                String location = locationField.getText();
-                String supplier = supplierField.getText();
-                String delivery = (String) deliveryField.getText();
-                String amount = amountField.getText();
-                int quantity = Integer.parseInt(amount);
-
-                String text = Mainframe.historyRecordNo + ":  " + itemId + "  :" + quantity + "  :" + location + "   " + supplier + "   " + "   \n";
-                // history tempHistory=new history(Mainframe.historyRecordNo,itemId,quantity,location,supplier,delivery);
-                history tempHistory = new history(Mainframe.historyRecordNo, itemId, quantity, location, supplier, delivery);
-                //	final ArrayList<history>currentItemHistoryPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
-                ArrayList<history> currentItemHistoryPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
-                currentItemHistoryPointer.add(tempHistory);
-                try {
-                    Connection con;
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", "ROOT");
-                    Databases db = new Databases(con);
-                    db.insertTransactionintoDatabase(con, maindriver.Company11);
-                } catch (ClassNotFoundException e3) {
-                    statusLabel.setText("Insertion: Error ");
-                    e3.printStackTrace();
-                } catch (SQLException e1) {
-
-                    e1.printStackTrace();
-                } catch (Exception e2) {
-                    statusLabel.setText("Insertion: Error ");
-                    e2.printStackTrace();
-                } finally {
-                    statusLabel.setText("Insertion: Completed ");
-                }
-
-                /*		} catch(Exception e1){
-					statusLabel.setText( "Add Transaction: Error-possible duplicate ");
-				} finally{
-					statusLabel.setText( "Add Transaction: Error-possible duplicate ");
-				}*/
-                //	fireDetailEvent(new DetailEvent(this,text));
-            }
-        });
-
-        JButton removeBtn = new JButton("Remove Tx");
-        //  tempHistory=new history(1,1,1,"test","test",new Date(99, 0, 99));
-
-        removeBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                statusLabel.setText("Tx: Beginning ");
-                //		try{
-                String name = nameField.getText();
-                String location = locationField.getText();
-                String supplier = supplierField.getText();
-                String delivery = (String) deliveryField.getText();
-                String amount = amountField.getText();
-                // 	String location = locationField.getText();
-                int quantity = Integer.parseInt(amount);
-
-                String text = Mainframe.historyRecordNo + ":  " + itemId + "  :" + quantity + "  :" + location + "   " + supplier + "   " + "   \n";
-                // history tempHistory=new history(Mainframe.historyRecordNo,itemId,quantity,location,supplier,delivery);
-                history tempHistory = new history(Mainframe.historyRecordNo, itemId, quantity, location, supplier, delivery);
-                //	final ArrayList<history>currentItemHistoryPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
-                ArrayList<history> currentItemHistoryPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
-                currentItemHistoryPointer.add(tempHistory);
-                try {
-                    Connection con;
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", "ROOT");
-                    Databases db = new Databases(con);
-                    db.deleteHistoryTransintoDatabase(con, maindriver.Company11);
-                } catch (ClassNotFoundException e3) {
-                    statusLabel.setText("Deletion: Error ");
-                    e3.printStackTrace();
-                } catch (SQLException e1) {
-
-                    e1.printStackTrace();
-                } catch (Exception e2) {
-                    statusLabel.setText("Deletion: Error ");
-                    e2.printStackTrace();
-                } finally {
-                    statusLabel.setText("Deletion: Completed ");
-                }
-
-                /*		} catch(Exception e1){
-						statusLabel.setText( "Add Transaction: Error-possible duplicate ");
-					} finally{
-						statusLabel.setText( "Add Transaction: Error-possible duplicate ");
-					}*/
-                //	fireDetailEvent(new DetailEvent(this,text));
-            }
-        });
-        JButton updateBtn = new JButton(" Create Item");
-
-        updateBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                statusLabel.setText("Creating.. ");
-                String name = nameField.getText();
-                String location = locationField.getText();
-                String supplier = supplierField.getText();
-                String delivery = deliveryField.getText();
-                String amount = amountField.getText();
-                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   \n";
-                try {
-                    Connection con;
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", "ROOT");
-                    Databases db = new Databases(con);
-                    db.insertNewItemTransintoDatabase(con, maindriver.Company11);
-                } catch (ClassNotFoundException e3) {
-                    statusLabel.setText("Creation: Error ");
-                    e3.printStackTrace();
-                } catch (SQLException e1) {
-
-                    e1.printStackTrace();
-                } catch (Exception e2) {
-                    statusLabel.setText("Creation: Error ");
-                    e2.printStackTrace();
-                } finally {
-                    statusLabel.setText("Creation: Completed ");
-                }
-                fireDetailEvent(new DetailEvent(this, text));
-            }
-        });
-
-        final JButton updateItemBtn = new JButton("UpdateItem");
-
-        updateItemBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                String name = nameField.getText();
-                String location = locationField.getText();
-                String supplier = supplierField.getText();
-                String delivery = deliveryField.getText();
-                String amount = amountField.getText();
-
-                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
-
-                fireDetailEvent(new DetailEvent(this, text));
-            }
-        });
-
-        JButton deleteBtn = new JButton(" Deletion Item");
-
-        deleteBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                statusLabel.setText("Deletion.. ");
-
-                try {
-                    Connection con;
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", "ROOT");
-                    Databases db = new Databases(con);
-                    db.deleteItemTransintoDatabase(con, maindriver.Company11);
-                } catch (ClassNotFoundException e3) {
-                    statusLabel.setText("Deletion: Error ");
-                    e3.printStackTrace();
-                } catch (SQLException e1) {
-
-                    e1.printStackTrace();
-                } catch (Exception e2) {
-                    statusLabel.setText("Deletion: Error ");
-                    e2.printStackTrace();
-                } finally {
-                    statusLabel.setText("Deletion: Completed ");
-                }
-                //	fireDetailEvent(new DetailEvent(this,text));
-            }
-        });
-        JButton itemReportBtn = new JButton("Item Report");
-
-        itemReportBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                statusLabel.setText("Item Report: Beginning ");
-                try {
-                    GenerateReport report = new GenerateReport(maindriver.Company11);
-                    ProcessBuilder pb = new ProcessBuilder("Notepad.exe", "Report-JavaProject.txt");
-                    pb.start();
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    statusLabel.setText("Item Report: Error ");
-                    e1.printStackTrace();
-                } finally {
-                    statusLabel.setText("Item Report: Completed ");
-                }
-
-                String name = nameField.getText();
-                String location = locationField.getText();
-                String supplier = supplierField.getText();
-                String delivery = deliveryField.getText();
-                String amount = amountField.getText();
-
-                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
-
-                fireDetailEvent(new DetailEvent(this, text));
-            }
-        });
-
-        JButton itemDeliveredReportBtn = new JButton("Item Report");
-
-        itemDeliveredReportBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                statusLabel.setText("Items Delivered Report: Beginning ");
-                try {
-                    GenerateReport report = new GenerateReport(maindriver.Company11);
-                    ProcessBuilder pb = new ProcessBuilder("Notepad.exe", "Report-JavaProject.txt");
-                    pb.start();
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    statusLabel.setText("Items Delivered Report: Error ");
-                    e1.printStackTrace();
-                } finally {
-                    statusLabel.setText("Items Delivered Report: Completed ");
-                }
-
-                String name = nameField.getText();
-                String location = locationField.getText();
-                String supplier = supplierField.getText();
-                String delivery = deliveryField.getText();
-                String amount = amountField.getText();
-
-                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
-
-                fireDetailEvent(new DetailEvent(this, text));
-            }
-        });
-
-        JButton backupBtn = new JButton("Backup");
-
-        backupBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                statusLabel.setText("Backup Database: Beginning ");
-                try {
-                    Connection con;
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", "ROOT");
-                    DatabaseBackup dbBackup;
-                    dbBackup = new DatabaseBackup(con);
-                    dbBackup.backup(con, maindriver.Company11);
-
-                } catch (ClassNotFoundException e3) {
-                    statusLabel.setText("Backup Database: Error ");
-                    e3.printStackTrace();
-                } catch (SQLException e1) {
-
-                    e1.printStackTrace();
-                } catch (Exception e2) {
-                    statusLabel.setText("Backup Database Error: Complelted ");
-                    e2.printStackTrace();
-                } finally {
-                    statusLabel.setText("Backup Database: Completed ");
-                }
-
-                String name = nameField.getText();
-                String location = locationField.getText();
-                String supplier = supplierField.getText();
-                String delivery = deliveryField.getText();
-                String amount = amountField.getText();
-
-                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
-
-                fireDetailEvent(new DetailEvent(this, text));
-            }
-        });
-
-        JButton restoreBtn = new JButton("Restore");
-
-        restoreBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                statusLabel.setText("Restore Database: Beginning ");
-                try {
-                    Connection con;
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", "ROOT");
-                    Databases db = new Databases(con);
-                    db.setup(con, maindriver.Company11);
-                } catch (ClassNotFoundException e3) {
-
-                    e3.printStackTrace();
-                } catch (SQLException e1) {
-
-                    e1.printStackTrace();
-                } catch (Exception e2) {
-
-                    e2.printStackTrace();
-                } finally {
-                    statusLabel.setText("Restore: Completed ");
-                }
-
-                String name = nameField.getText();
-                String location = locationField.getText();
-                String supplier = supplierField.getText();
-                String delivery = deliveryField.getText();
-                String amount = amountField.getText();
-
-                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
-
-                fireDetailEvent(new DetailEvent(this, text));
-            }
-        });
-
-        JButton serialBackupBtn = new JButton("Save Settings");
-
-        serialBackupBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                statusLabel.setText("Save Settings: Beginning ");
-
-                try {
-                    Serialized serial = new Serialized(maindriver.Company11);
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-                    statusLabel.setText("Save Settings: Error ");
-                } finally {
-                    statusLabel.setText("Save Settings: Completed ");
-                }
-
-                String name = nameField.getText();
-                String location = locationField.getText();
-                String supplier = supplierField.getText();
-                String delivery = deliveryField.getText();
-                String amount = amountField.getText();
-
-                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
-
-                fireDetailEvent(new DetailEvent(this, text));
-            }
-        });
-
-        JButton serialRestoreBtn = new JButton("Restore");
-
-        serialRestoreBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                statusLabel.setText("Restore Settings: Beginning ");
-                try {
-                    Serialized serial = new Serialized(maindriver.Company11);
-                    serial.restoreSerialized(maindriver.Company11);
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-                    statusLabel.setText("Restore Settings: Error ");
-                } finally {
-                    statusLabel.setText("Restore Settings: Completed ");
-                }
-
-                String name = nameField.getText();
-                String location = locationField.getText();
-                String supplier = supplierField.getText();
-                String delivery = deliveryField.getText();
-                String amount = amountField.getText();
-
-                String text = name + ":  " + location + "  :" + supplier + "  :" + delivery + "   " + amount + "   " + "   \n";
-
-                fireDetailEvent(new DetailEvent(this, text));
-            }
-        });
-
-        ///new	
-        setLayout(new BorderLayout());
-        //old
-        //   setLayout(new GridBagLayout());
-
-        //new	
-        JPanel topPanel = new JPanel(new GridBagLayout());
-
-        GridBagConstraints gc = new GridBagConstraints();
-        gc = new GridBagConstraints();
-
-        gc.anchor = GridBagConstraints.LINE_END;
-        gc.weightx = 0.1;
-        gc.weighty = 0.1;
-
-        gc.gridx = 0;
-        gc.gridy = 0;
-
-        //	topPanel.add(transactionLabel,gc);
-        gc.gridx = 0;
-        gc.gridy = 1;
-        topPanel.add(nameLabel, gc);
-
-        gc.gridx = 0;
-        gc.gridy = 2;
-        topPanel.add(locationLabel, gc);
-
-        gc.gridx = 0;
-        gc.gridy = 3;
-
-        topPanel.add(supplierLabel, gc);
-
-        gc.gridx = 0;
-        gc.gridy = 4;
-        topPanel.add(deliveryLabel, gc);
-
-        gc.gridx = 0;
-        gc.gridy = 5;
-        topPanel.add(amountLabel, gc);
-
-        gc.gridx = 0;
-        gc.gridy = 6;
-
-        gc.gridx = 0;
-        gc.gridy = 7;
-        topPanel.add(statusLabel, gc);
-
-        gc.weighty = 10;
-
-        gc.anchor = GridBagConstraints.LINE_START;
-
-        gc.gridx = 1;
-        gc.gridy = 1;
-        topPanel.add(nameField, gc);
-
-        gc.gridx = 1;
-        gc.gridy = 2;
-        topPanel.add(locationField, gc);
-
-        gc.gridx = 1;
-        gc.gridy = 3;
-        topPanel.add(supplierField, gc);
-
-        gc.gridx = 1;
-        gc.gridy = 4;
-        topPanel.add(deliveryField, gc);
-
-        gc.gridx = 1;
-        gc.gridy = 5;
-        topPanel.add(amountField, gc);
-
-        gc.gridx = 1;
-        gc.gridy = 6;
-
-        gc.anchor = GridBagConstraints.FIRST_LINE_START;
-
-        gc.gridx = 0;
-        gc.gridy = 20;
-        topPanel.add(addBtn, gc);
-
-        gc.gridx = 1;
-        gc.gridy = 20;
-        topPanel.add(updateItemBtn, gc);
-
-        // Removed locationLabel and locationField (no longer used)
-        gc.gridx = 0;
-        gc.gridy = 24;
-        topPanel.add(updateBtn, gc);
-
-        gc.gridx = 1;
-        gc.gridy = 24;
-        topPanel.add(updateItemBtn, gc);
-
-        gc.gridx = 1;
-        gc.gridy = 25;
-        topPanel.add(deleteBtn, gc);
-
-        gc.gridx = 1;
-        gc.gridy = 26;
-        topPanel.add(removeBtn, gc);
-
-        add(topPanel, BorderLayout.NORTH);
-
-        //new 
-        JPanel centerPanel = new JPanel(new GridBagLayout());
-
-        GridBagConstraints gcc = new GridBagConstraints();
-        gcc = new GridBagConstraints();
-
-        gcc.anchor = GridBagConstraints.LINE_START;
-//	gcc.weightx = 0.1;
-        gcc.weightx = 1.0;
-        gcc.weighty = 0.1;
-
-        gcc.gridx = 0;
-        gcc.gridy = 0;
-        centerPanel.add(statusLabel, gcc);
-
-        gcc.gridx = 0;
-        gcc.gridy = 1;
-            // topPanel.add(locationLabel, gc);
-            // topPanel.add(locationField, gc);
-
-        centerPanel.add(backupBtn, gcc);
-
-        gcc.gridx = 1;
-        gcc.gridy = 2;
-
-        centerPanel.add(restoreBtn, gcc);
-
-        gcc.gridx = 0;
-        gcc.gridy = 3;
-        centerPanel.add(spacerLabel, gcc);
-
-        gcc.gridx = 0;
-        gcc.gridy = 4;
-        centerPanel.add(itemReportBtn, gcc);
-
-        gcc.gridx = 0;
-        gcc.gridy = 5;
-        centerPanel.add(deliveryFrom, gcc);
-
-        gcc.gridx = 0;
-        gcc.gridy = 6;
-        centerPanel.add(reportDeliveryFrom, gcc);
-
-        gcc.gridx = 1;
-        gcc.gridy = 5;
-        centerPanel.add(deliveryTo, gcc);
-
-        gcc.gridx = 1;
-        gcc.gridy = 6;
-        centerPanel.add(reportDeliveryTo, gcc);
-
-        gcc.gridx = 0;
-        gcc.gridy = 7;
-        centerPanel.add(itemDeliveredReportBtn, gcc);
-
-        gcc.gridx = 0;
-        gcc.gridy = 9;
-        centerPanel.add(serialBackupBtn, gcc);
-
-        gcc.gridx = 1;
-        gcc.gridy = 9;
-        centerPanel.add(serialRestoreBtn, gcc);
-
-        add(centerPanel, BorderLayout.SOUTH);
+                    // Set fixed size for the DetailsPanel to prevent stretching
+                    Dimension panelDim = new Dimension(500, 350);
+                    setPreferredSize(panelDim);
+                    setMaximumSize(panelDim);
+                    setMinimumSize(panelDim);
+                    setAlignmentX(CENTER_ALIGNMENT);
+                // Prevent text fields from stretching
+                Dimension fieldDim = new Dimension(120, 24);
+                nameField.setMaximumSize(fieldDim);
+                supplierField.setMaximumSize(fieldDim);
+                locationField.setMaximumSize(fieldDim);
+                deliveryField.setMaximumSize(fieldDim);
+                amountField.setMaximumSize(fieldDim);
+                currentCompanyField.setMaximumSize(fieldDim);
+            // Set a fixed preferred size for the panel (adjust as needed)
+            setPreferredSize(new Dimension(500, 350));
+        // Make DetailsPanel visually prominent as the front panel
+        setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+        setBackground(new Color(255, 255, 220)); // Light yellow background
+
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        // Set up the current company field (non-editable)
+        currentCompanyField.setEditable(false);
+        currentCompanyField.setBackground(new Color(240,240,240));
+
+        // Helper to create a row panel for label/field (absolutely only two components per row)
+        int rowHeight = 28;
+        java.util.function.BiFunction<JLabel, JTextField, JPanel> row = (label, field) -> {
+            JPanel p = new JPanel(new java.awt.GridLayout(1, 2));
+            label.setPreferredSize(new Dimension(1, rowHeight));
+            field.setPreferredSize(new Dimension(1, rowHeight));
+            p.add(label);
+            p.add(field);
+            return p;
+        };
+
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        add(row.apply(currentCompanyLabel, currentCompanyField));
+        add(row.apply(nameLabel, nameField));
+        add(row.apply(providerNameLabel, supplierField));
+        add(row.apply(locationLabel, locationField));
+        add(row.apply(deliveryLabel, deliveryField));
+        add(row.apply(quantityLabel, amountField));
+
+        // Panel for Add/Update/Remove buttons
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.add(addBtn);
+        buttonPanel.add(updateBtn);
+        buttonPanel.add(removeBtn);
+        add(buttonPanel);
+
+        // Status label
+        JPanel statusPanel = new JPanel();
+        statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
+        statusPanel.add(statusLabel);
+        add(statusPanel);
+
+        // Panel for extra buttons
+        JPanel extraButtonPanel = new JPanel();
+        extraButtonPanel.setLayout(new BoxLayout(extraButtonPanel, BoxLayout.X_AXIS));
+        extraButtonPanel.add(updateItemBtn);
+        extraButtonPanel.add(deleteBtn);
+        extraButtonPanel.add(itemReportBtn);
+        extraButtonPanel.add(itemDeliveredReportBtn);
+        extraButtonPanel.add(backupBtn);
+        extraButtonPanel.add(restoreBtn);
+        extraButtonPanel.add(serialBackupBtn);
+        extraButtonPanel.add(serialRestoreBtn);
+        add(extraButtonPanel);
+
+        // (Later: add detailTable1 and detailTable2 panels here)
     }
+
+    // Helper to get the current selected company name
+    private String getCurrentCompanyName() {
+        try {
+            return maindriver.Company11.get(Mainframe.companyIndex).getName();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    // Moved misplaced GUI layout code into the constructor
+    // (No code should be here outside methods/constructors)
 
     public void fireDetailEvent(DetailEvent event) {
         Object[] listeners = listenerList.getListenerList();
@@ -663,3 +243,4 @@ public class DetailsPanel extends JPanel {
     }
 
 }
+

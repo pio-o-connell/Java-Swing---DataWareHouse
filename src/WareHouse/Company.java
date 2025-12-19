@@ -15,6 +15,10 @@ import java.util.ArrayList;
 
 
 public class Company implements Serializable{
+		// Compatibility method for legacy code
+		public String getName() {
+			return getCompanyName();
+		}
 	
 	private int companyId;
 	private String companyName;

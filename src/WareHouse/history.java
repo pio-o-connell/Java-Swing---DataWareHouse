@@ -10,6 +10,10 @@ import java.util.Date;
  * 
  ---------------------------------------------------------------------------------------*/
 public class history implements Serializable{
+		// Compatibility method for legacy code
+		public void setSupplier(String supplier) {
+			setProvider(supplier);
+		}
 	private int historyId, itemId, amount;
 	private String location;
 	private String provider;

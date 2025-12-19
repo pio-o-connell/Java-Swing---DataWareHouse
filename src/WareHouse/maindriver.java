@@ -21,6 +21,8 @@ import javax.swing.SwingUtilities;
 
 public class maindriver{
 	public static ArrayList<Company> Company = new ArrayList<Company>();
+	// Alias for legacy code compatibility
+	public static ArrayList<Company> Company11 = Company;
 
 
 	//Necessary for initial table window display
@@ -59,32 +61,32 @@ public class maindriver{
 	
 		SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
-				
-				String user = JOptionPane.showInputDialog(null,"User"); // dialog requests username
-				String password = JOptionPane.showInputDialog(null,"Password"); // dialog requests password
-				
-				if ("root".equals(user) && "ROOT".equals(password)){
-					JOptionPane.showMessageDialog(null,"login okay");
-					JFrame frame;
-					try {
-						frame = new Mainframe("Warehouse Inventory System");
-						frame.setSize(800,100);
-						frame.setResizable(true);
-						frame.setLocationRelativeTo(null);
-						frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-						frame.pack();
-						frame.setVisible(true);
-					} catch (Exception e) {
+				// LOGIN DISABLED FOR TESTING/DEBUGGING
+				// String user = JOptionPane.showInputDialog(null,"User"); // dialog requests username
+				// String password = JOptionPane.showInputDialog(null,"Password"); // dialog requests password
+				// if ("root".equals(user) && "ROOT".equals(password)){
+				//     JOptionPane.showMessageDialog(null,"login okay");
+				JFrame frame;
+				try {
+					frame = new Mainframe("Warehouse Inventory System");
+					frame.setSize(800,100);
+					frame.setResizable(true);
+					frame.setLocationRelativeTo(null);
+					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					frame.pack();
+					frame.setVisible(true);
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
-						e.printStackTrace();
-					} // main window is created
-				}
-				else
-				
-				{
-					JOptionPane.showMessageDialog(null,"login not okay");	
-				}
+					e.printStackTrace();
+				} // main window is created
+				// }
+				// else
+				// {
+				//     JOptionPane.showMessageDialog(null,"login not okay");    
+				// }
 			}
 		});
 
+
+}
 }

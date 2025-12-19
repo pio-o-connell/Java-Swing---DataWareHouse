@@ -18,6 +18,25 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public final class Databases {
+    // Update a history record in the database and in-memory model
+    public void updateHistoryTransintoDatabase(Connection con, ArrayList<Company> Company, int companyIndex, int itemIndex, int historyIndex, String name, String location, String supplier, String delivery, int quantity) throws SQLException {
+        // Update in-memory model
+        history hist = Company.get(companyIndex).getItems().get(itemIndex).getHistory().get(historyIndex);
+        hist.setLocation(location);
+        hist.setSupplier(supplier);
+        hist.setDeliveryDate(delivery);
+        hist.setAmount(quantity);
+
+        // Update database
+        String query = "UPDATE history SET location = ?, supplier = ?, delivery_date = ?, amount = ? WHERE history_id = ?";
+        PreparedStatement stmt = con.prepareStatement(query);
+        stmt.setString(1, location);
+        stmt.setString(2, supplier);
+        stmt.setString(3, delivery);
+        stmt.setInt(4, quantity);
+        stmt.setInt(5, hist.getHistoryId());
+        stmt.executeUpdate();
+    }
 
     Connection con;
     ArrayList<Company> Company = new ArrayList<Company>();
@@ -221,7 +240,7 @@ public final class Databases {
 
         try {
             PreparedStatement statement;
-            statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(ITEM_id,AMOUNT,LOCATION,SUPPLIER,DELIVERY_DATE)  VALUES  (?,?,?,?,?)");
+                statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(ITEM_id,AMOUNT,LOCATION,Supplier,DELIVERY_DATE)  VALUES  (?,?,?,?,?)");
             //String name = DetailsPanel.nameField.getText();
             int temp = maindriver.Company.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemId();
             String location = DetailsPanel.locationField.getText();
@@ -303,7 +322,7 @@ public final class Databases {
         // Now to create entry in the history database
         try {
             PreparedStatement statement;
-            statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(ITEM_id,AMOUNT,LOCATION,SUPPLIER,DELIVERY_DATE)  VALUES  (?,?,?,?,?)");
+                statement = (PreparedStatement) con.prepareStatement("INSERT  INTO  history(ITEM_id,AMOUNT,LOCATION,Supplier,DELIVERY_DATE)  VALUES  (?,?,?,?,?)");
             //String name = DetailsPanel.nameField.getText();
 
             int temp = item_id;
