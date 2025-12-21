@@ -97,11 +97,21 @@ public class Mainframe extends JFrame {
 			
 			
 			//Necessary for initial table window display
-			final ArrayList<Company> tableCompanyPointer = maindriver.Company11;  //pointer to first element of Company data structure
-			final ArrayList<Item>tableItemPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems(); 
-			// pointer to first item element of the first company record element
-			final ArrayList<history> tableHistorypointer = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(itemIndex).getHistory();
-			// pointer to the history records for the first item of the first company
+			final ArrayList<Company> tableCompanyPointer = maindriver.Company11;
+			final ArrayList<Item> tableItemPointer;
+			final ArrayList<history> tableHistorypointer;
+			if (!maindriver.Company11.isEmpty()) {
+				ArrayList<Item> items = maindriver.Company11.get(Mainframe.companyIndex).getItems();
+				tableItemPointer = items;
+				if (!items.isEmpty()) {
+					tableHistorypointer = items.get(itemIndex).getHistory();
+				} else {
+					tableHistorypointer = new ArrayList<>();
+				}
+			} else {
+				tableItemPointer = new ArrayList<>();
+				tableHistorypointer = new ArrayList<>();
+			}
 			
 			
 			
@@ -164,12 +174,21 @@ public class Mainframe extends JFrame {
 					String itemName = firstItem.getItemName();
 					java.util.List<history> histories = firstItem.getHistory();
 					if (histories != null && !histories.isEmpty()) {
-						history firstHistory = histories.get(0);
-						String supplier = firstHistory.getProvider();
-						String location = firstHistory.getLocation();
-						String delivery = firstHistory.getDeliveryDate();
-						int amount = firstHistory.getAmount();
-						detailPanel.setFields(itemName, location, supplier, delivery, String.valueOf(amount));
+						// Select the first row in the history table and update DetailsPanel to match
+						javax.swing.SwingUtilities.invokeLater(() -> {
+							if (detailTable2 != null && TableWindow2.table3 != null && TableWindow2.table3.getRowCount() > 0) {
+								TableWindow2.table3.setRowSelectionInterval(0, 0);
+								int modelRow = TableWindow2.table3.convertRowIndexToModel(0);
+								if (modelRow >= 0 && modelRow < histories.size()) {
+									history selectedHistory = histories.get(modelRow);
+									String supplier = selectedHistory.getSupplier() != null ? selectedHistory.getSupplier() : selectedHistory.getProvider();
+									String location = selectedHistory.getLocation();
+									String delivery = selectedHistory.getDeliveryDate();
+									int amount = selectedHistory.getAmount();
+									detailPanel.setFields(itemName, location, supplier, delivery, String.valueOf(amount));
+								}
+							}
+						});
 					} else {
 						String supplier = "";
 						String location = "";

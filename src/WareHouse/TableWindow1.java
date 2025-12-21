@@ -73,29 +73,21 @@ public class TableWindow1 extends JPanel {
         setBackground(new java.awt.Color(240, 240, 255));
         setMinimumSize(new java.awt.Dimension(300, 200));
         setPreferredSize(new java.awt.Dimension(400, 300));
-        //     private static final long serialVersionUID = 1L;
         this.history = history11;
         this.items = items;
         this.companies = companies;
      
         // These are used as workaround for non closures in java
-        
         final MyTableModel2[] model2 = new MyTableModel2[1];
-        final MyTableModel[] model=new MyTableModel[1];
-  //      final TableRowSorter<MyTableModel2> sorter2;
-  //      final TableRowSorter<MyTableModel> sorter;
-        
-        
-        
+        final MyTableModel[] model = new MyTableModel[1];
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         model[0] = new MyTableModel(this.companies);
-
         sorter = new TableRowSorter<MyTableModel>(model[0]);
-        table = new JTable(model[0]){
-			public boolean isCellEditable(int rowIndex, int colIndex) {
-        		  return false; //Cancel the editing of any cell
-        		  }
-           };
+        table = new JTable(model[0]) {
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false; //Cancel the editing of any cell
+            }
+        };
         table.getSelectionModel().addListSelectionListener(
             new ListSelectionListener() {
                 public void valueChanged(ListSelectionEvent event) {
@@ -109,19 +101,14 @@ public class TableWindow1 extends JPanel {
                                 maindriver.Company11.get(modelRow).getCompanyName(), modelRow));
                         // Update current company field in DetailsPanel
                         DetailsPanel.currentCompanyField.setText(maindriver.Company11.get(modelRow).getCompanyName());
-                        // Filter items by companyId
-                        int selectedCompanyId = maindriver.Company11.get(modelRow).getCompanyId();
-                        ArrayList<Item> filteredItems = new ArrayList<>();
-                        for (Item item : items) {
-                            if (item.getCompanyId() == selectedCompanyId) {
-                                filteredItems.add(item);
-                            }
-                        }
+                        // Use the selected company's item list directly
+                        ArrayList<Item> filteredItems = new ArrayList<>(maindriver.Company11.get(modelRow).getItems());
                         model2[0] = new MyTableModel2(filteredItems, 0);
                         table2.setModel(model2[0]);
                         sorter2.setModel(model2[0]);
-                        // Update DetailsPanel fields for first item of selected company
+                        // Select the first item if available
                         if (!filteredItems.isEmpty()) {
+                            table2.setRowSelectionInterval(0, 0);
                             Item firstItem = filteredItems.get(0);
                             String itemName = firstItem.getItemName();
                             java.util.List<history> histories = firstItem.getHistory();
@@ -148,9 +135,9 @@ public class TableWindow1 extends JPanel {
                 }
             }
         );
-
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane);
+            // ...existing code...
         JPanel form = new JPanel(new SpringLayout());
         JLabel l1 = new JLabel("Filter Text:", SwingConstants.TRAILING);
         l1.setPreferredSize(new Dimension(10,10));
@@ -186,6 +173,24 @@ public class TableWindow1 extends JPanel {
         SpringUtilites.makeCompactGrid(form, 2, 2, 6, 6, 6, 6);
      //  took this out  add(form);
     
+        // --- FIX: Declare and initialize l12, l22, and form2 for the second filter/notes panel ---
+        JPanel form2 = new JPanel(new SpringLayout());
+        JLabel l12 = new JLabel("Filter Text:", SwingConstants.TRAILING);
+        l12.setPreferredSize(new Dimension(10,10));
+        filterText2 = new JTextField();
+        JLabel l22 = new JLabel("Notes:", SwingConstants.TRAILING);
+        l22.setPreferredSize(new Dimension(50,50));
+        statusText2 = new JTextArea("History for" ,1,4);
+        statusText2.setPreferredSize(new Dimension(50,50));
+        statusText2.setEditable(true);
+        JScrollPane scrollPane12 = new JScrollPane(statusText2);
+        scrollPane12.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        // Add all 4 components in correct order
+        form2.add(l12);
+        form2.add(filterText2);
+        form2.add(l22);
+        form2.add(scrollPane12);
+
           // Only show items for the first company on startup
           int firstCompanyId = companies.get(0).getCompanyId();
           ArrayList<Item> firstCompanyItems = new ArrayList<>();
@@ -205,112 +210,85 @@ public class TableWindow1 extends JPanel {
           table2.setPreferredScrollableViewportSize(new Dimension(500, 200));
           table2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
           table2.getSelectionModel().addListSelectionListener(
-                  new ListSelectionListener() {
-                      public void valueChanged(ListSelectionEvent event) {
-                          if (event.getValueIsAdjusting()) {
+              new ListSelectionListener() {
+                  public void valueChanged(ListSelectionEvent event) {
+                      if (event.getValueIsAdjusting()) {
+                          return;
+                      }
+                      int viewRow = table2.getSelectedRow();
+                      if (viewRow < 0) {
+                          //Selection got filtered away.
+                          statusText2.setText("");
+                      } else {
+                          int modelRow = table2.convertRowIndexToModel(viewRow);
+                          if (modelRow < 0 || modelRow >= maindriver.Company11.get(Mainframe.companyIndex).getItems().size()) {
+                              statusText2.setText("");
                               return;
                           }
-                          int viewRow = table2.getSelectedRow();
-                          if (viewRow < 0) {
-                              //Selection got filtered away.
-                              statusText2.setText("");
-                          } else {
-                              int modelRow = table2.convertRowIndexToModel(viewRow);
-                              if (modelRow < 0 || modelRow >= maindriver.Company11.get(Mainframe.companyIndex).getItems().size()) {
-                                  statusText2.setText("");
-                                  return;
-                              }
-                              Mainframe.itemIndex=modelRow;
-                              
-                              statusText2.setText(
-                                  String.format(" Item selected: %s. " +
-                                      "Selected Row in model: %d.", 
-                                      maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemName(), modelRow));
-                             
-							// clear table 3
-                              int rowsToClear = TableWindow2.model.getRowCount();
-                              int colsToClear = TableWindow2.model.getColumnCount();
-                              for (int i = 0; i < rowsToClear; i++) {
-                                  for (int j = 0; j < colsToClear; j++) {
-                                      TableWindow2.model.setValueAt(" ", i, j);
-                                  }
-                              }
-                              
+                          Mainframe.itemIndex = modelRow;
+                          statusText2.setText(
+                              String.format(" Item selected: %s. " +
+                                  "Selected Row in model: %d.",
+                                  maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemName(), modelRow));
 
-                              
-                              
-                              
-                                     ArrayList<history>currentHistoryPointer=maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
-                                     int listSize=currentHistoryPointer.size();
-                                     for(int i=0;i<listSize;i++){
-                                         // Write directly to the model (view indices can be invalid when sorting/filtering).
-                                         TableWindow2.model.setValueAt((Object)currentHistoryPointer.get(i).getDeliveryDate(), i, 0);
-                                         TableWindow2.model.setValueAt((Object)currentHistoryPointer.get(i).getLocation(), i, 1);
-                                         TableWindow2.model.setValueAt((Object)currentHistoryPointer.get(i).getAmount(), i, 2);
-                                         TableWindow2.model.setValueAt((Object)currentHistoryPointer.get(i).getSupplier(), i, 3);
-                                     }
-                                     if (listSize > 0) {
-                                         DetailsPanel.nameField.setText(maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemName());
-                                         DetailsPanel.locationField.setText(currentHistoryPointer.get(0).getLocation());
-                                         DetailsPanel.deliveryField.setText(currentHistoryPointer.get(0).getDeliveryDate());
-                                         DetailsPanel.amountField.setText(String.valueOf(currentHistoryPointer.get(0).getAmount()));
-                                         DetailsPanel.supplierField.setText(currentHistoryPointer.get(0).getSupplier());
-                                         DetailsPanel.reportDeliveryFrom.setText(currentHistoryPointer.get(0).getDeliveryDate());
-                                         DetailsPanel.reportDeliveryTo.setText(currentHistoryPointer.get(0).getDeliveryDate());
-                                         DetailsPanel.notesArea.setText(currentHistoryPointer.get(0).getNotes());
-                                     }
-                                         // If no history, fill with item info
-                                         Item selectedItem = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex);
-                                         DetailsPanel.nameField.setText(selectedItem.getItemName());
-                                         DetailsPanel.locationField.setText("");
-                                         DetailsPanel.deliveryField.setText("");
-                                         DetailsPanel.amountField.setText(String.valueOf(selectedItem.getQuantity()));
-                                         DetailsPanel.supplierField.setText("");
-                              	
-                              			
-                              		TableWindow2.nmrRowsTable3 = listSize;
-                              			}
-                          
+                          // clear table 3
+                          int rowsToClear = TableWindow2.model.getRowCount();
+                          int colsToClear = TableWindow2.model.getColumnCount();
+                          for (int i = 0; i < rowsToClear; i++) {
+                              for (int j = 0; j < colsToClear; j++) {
+                                  TableWindow2.model.setValueAt(" ", i, j);
+                              }
                           }
-                      
+
+                          ArrayList<history> currentHistoryPointer = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getHistory();
+                          int listSize = currentHistoryPointer.size();
+                          for (int i = 0; i < listSize; i++) {
+                              // Write directly to the model (view indices can be invalid when sorting/filtering).
+                              TableWindow2.model.setValueAt((Object) currentHistoryPointer.get(i).getDeliveryDate(), i, 0);
+                              TableWindow2.model.setValueAt((Object) currentHistoryPointer.get(i).getLocation(), i, 1);
+                              TableWindow2.model.setValueAt((Object) currentHistoryPointer.get(i).getAmount(), i, 2);
+                              TableWindow2.model.setValueAt((Object) currentHistoryPointer.get(i).getSupplier(), i, 3);
+                          }
+
+                          // Update DetailsPanel with the most recent history record if available
+                          if (listSize > 0) {
+                              history latestHistory = currentHistoryPointer.get(listSize - 1); // Use the most recent (last) history record
+                              DetailsPanel.nameField.setText(maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex).getItemName());
+                              DetailsPanel.locationField.setText(latestHistory.getLocation());
+                              DetailsPanel.deliveryField.setText(latestHistory.getDeliveryDate());
+                              DetailsPanel.amountField.setText(String.valueOf(latestHistory.getAmount()));
+                              DetailsPanel.supplierField.setText(latestHistory.getSupplier());
+                              DetailsPanel.reportDeliveryFrom.setText(latestHistory.getDeliveryDate());
+                              DetailsPanel.reportDeliveryTo.setText(latestHistory.getDeliveryDate());
+                              DetailsPanel.notesArea.setText(latestHistory.getNotes());
+                          } else {
+                              // If no history, fill with item info
+                              Item selectedItem = maindriver.Company11.get(Mainframe.companyIndex).getItems().get(Mainframe.itemIndex);
+                              DetailsPanel.nameField.setText(selectedItem.getItemName());
+                              DetailsPanel.locationField.setText("");
+                              DetailsPanel.deliveryField.setText("");
+                              DetailsPanel.amountField.setText(String.valueOf(selectedItem.getQuantity()));
+                              DetailsPanel.supplierField.setText("");
+                          }
+
+                          TableWindow2.nmrRowsTable3 = listSize;
+                      }
                   }
-          );
-          JScrollPane scrollPane2 = new JScrollPane(table2);
-          add(scrollPane2);
-          JPanel form2 = new JPanel(new SpringLayout());
-          JLabel l12 = new JLabel("Filter Text:", SwingConstants.TRAILING);
-          l12.setPreferredSize(new Dimension(10,10));
-          form2.add(l12);
-          filterText2 = new JTextField();
-          filterText2.getDocument().addDocumentListener(
-                  new DocumentListener() {
-                      public void changedUpdate(DocumentEvent e) {
-                          newFilter2();
-                      }
-                      public void insertUpdate(DocumentEvent e) {
-                          newFilter2();
-                      }
-                      public void removeUpdate(DocumentEvent e) {
-                          newFilter2();
-                      }
-                  });
-         
-          l12.setLabelFor(filterText2);
-          form2.add(filterText2);
-          JLabel l22 = new JLabel("Notes:", SwingConstants.TRAILING);
-          l22.setPreferredSize(new Dimension(50,50));
-          l22.setLabelFor(statusText2);
-          form2.add(l22);
-          statusText2 = new JTextArea("History for" ,1,4);
-          statusText2.setPreferredSize(new Dimension(50,50));
-          statusText2.setEditable(true); 
-          JScrollPane scrollPane12 = new JScrollPane(statusText2);
-          scrollPane12.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-          form2.add(l22);
-          form2.add(scrollPane12);
-          SpringUtilites.makeCompactGrid(form2, 2, 2, 6, 6, 6, 6);
-          add(form2);
-   
+              });
+        // Set up filter and statusText2 listeners
+        filterText2.getDocument().addDocumentListener(
+            new DocumentListener() {
+                public void changedUpdate(DocumentEvent e) { newFilter2(); }
+                public void insertUpdate(DocumentEvent e) { newFilter2(); }
+                public void removeUpdate(DocumentEvent e) { newFilter2(); }
+            });
+        l12.setLabelFor(filterText2);
+        l22.setLabelFor(statusText2);
+        SpringUtilites.makeCompactGrid(form2, 2, 2, 6, 6, 6, 6);
+        // Now that table2 is fully initialized, add it to the panel above the filter/notes
+        JScrollPane scrollPane2 = new JScrollPane(table2);
+        add(scrollPane2);
+        add(form2);
     }
 
     /** 
@@ -388,7 +366,11 @@ public class TableWindow1 extends JPanel {
          * rather than a check box.
          */
         public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
+            if (getRowCount() == 0) {
+                return Object.class;
+            }
+            Object value = getValueAt(0, c);
+            return (value == null) ? Object.class : value.getClass();
         }
 
         /*
@@ -485,7 +467,11 @@ public class TableWindow1 extends JPanel {
         }
 
         public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
+            if (getRowCount() == 0) {
+                return Object.class;
+            }
+            Object value = getValueAt(0, c);
+            return (value == null) ? Object.class : value.getClass();
         }
 
         public boolean isCellEditable(int row, int col) {

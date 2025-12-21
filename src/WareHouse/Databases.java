@@ -1,23 +1,139 @@
-package WareHouse;
 //-------------------------------------------------------------------
-///
 // Loads the database into the memory structure.
-// Also handled deletions and insertions into the database
-// No code here to modify the records
 //-------------------------------------------------------------------
-//import java.sql.DriverManager;
+
+
+package WareHouse;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-
-//import com.mysql.jdbc.Connection;
-//import com.mysql.jdbc.PreparedStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import WareHouse.Company;
+import WareHouse.Item;
+import WareHouse.User;
+import WareHouse.history;
+import WareHouse.Mainframe;
+import WareHouse.DetailsPanel;
 
 public final class Databases {
+    // Resets and repopulates the database with gardening test data
+    public void resetAndPopulateGardeningTestData(Connection con) throws SQLException {
+        java.util.Random rand = new java.util.Random();
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        // Reset all data
+        PreparedStatement delHist = con.prepareStatement("DELETE FROM history");
+        delHist.executeUpdate();
+        PreparedStatement delItem = con.prepareStatement("DELETE FROM item");
+        delItem.executeUpdate();
+        PreparedStatement delComp = con.prepareStatement("DELETE FROM company");
+        delComp.executeUpdate();
+
+        // Add only two companies: one original and one gardening company
+        String[] companyNames = {"Kanturk-Services", "GreenThumb Supplies"};
+        int[] companyIds = {44008177, 77008177};
+        for (int i = 0; i < companyNames.length; i++) {
+            PreparedStatement ps = con.prepareStatement("INSERT INTO company (company_id, company_name) VALUES (?, ?)");
+            ps.setInt(1, companyIds[i]);
+            ps.setString(2, companyNames[i]);
+            ps.executeUpdate();
+            ps.close();
+        }
+
+        // Add items for Kanturk-Services (4 items)
+        String[] kanturkItems = {"Shovel", "Rake", "Lawn Mower", "Hose"};
+        int kanturkCompanyId = 44008177;
+        int kanturkItemIdBase = 44020000;
+        for (int j = 0; j < kanturkItems.length; j++) {
+            int itemId = kanturkItemIdBase + j;
+            String itemNote = "Kanturk item: " + kanturkItems[j] + " - essential for every garden.";
+            PreparedStatement ps = con.prepareStatement("INSERT INTO item (item_id, item_name, company_id, quantity, notes) VALUES (?, ?, ?, ?, ?)");
+            ps.setInt(1, itemId);
+            ps.setString(2, kanturkItems[j]);
+            ps.setInt(3, kanturkCompanyId);
+            ps.setInt(4, 10 + rand.nextInt(90));
+            ps.setString(5, itemNote);
+            ps.executeUpdate();
+            ps.close();
+
+            // Add 4 history records per item
+            String[] locations = {"Greenhouse", "Garden Shed", "Nursery", "Compost Area"};
+            String[] providers = {"GardenWorld", "PlantDepot", "SeedMasters", "ToolTown"};
+            String[] notes = {
+                "Planted in spring for best results",
+                "Keep soil moist and well-drained",
+                "Fertilize every two weeks"
+            };
+            for (int h = 0; h < 4; h++) {
+                int historyId = 21000000 + j * 10 + h;
+                int amount = 5 + rand.nextInt(20);
+                String location = locations[rand.nextInt(locations.length)];
+                String provider = providers[rand.nextInt(providers.length)];
+                String deliveryDate = sdf.format(new java.util.Date(System.currentTimeMillis() - rand.nextInt(1000 * 60 * 60 * 24 * 365)));
+                String note = notes[h % notes.length] + " (" + kanturkItems[j] + ")";
+                PreparedStatement psHist = con.prepareStatement(
+                    "INSERT INTO history (history_id, item_id, amount, location, provider, delivery_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                );
+                psHist.setInt(1, historyId);
+                psHist.setInt(2, itemId);
+                psHist.setInt(3, amount);
+                psHist.setString(4, location);
+                psHist.setString(5, provider);
+                psHist.setString(6, deliveryDate);
+                psHist.setString(7, note);
+                psHist.executeUpdate();
+                psHist.close();
+            }
+        }
+
+        // Add items for GreenThumb Supplies (4 items)
+        String[] gardeningItems = {"Compost Bin", "Garden Hoe", "Tomato Seeds", "Watering Can"};
+        int gardeningCompanyId = 77008177;
+        int itemIdBase = 44010000;
+        for (int j = 0; j < gardeningItems.length; j++) {
+            int itemId = itemIdBase + j;
+            String itemNote = "Gardening item: " + gardeningItems[j] + " - essential for every garden.";
+            PreparedStatement ps = con.prepareStatement("INSERT INTO item (item_id, item_name, company_id, quantity, notes) VALUES (?, ?, ?, ?, ?)");
+            ps.setInt(1, itemId);
+            ps.setString(2, gardeningItems[j]);
+            ps.setInt(3, gardeningCompanyId);
+            ps.setInt(4, 10 + rand.nextInt(90));
+            ps.setString(5, itemNote);
+            ps.executeUpdate();
+            ps.close();
+
+            // Add 4 history records per item
+            String[] locations = {"Greenhouse", "Garden Shed", "Nursery", "Compost Area"};
+            String[] providers = {"GardenWorld", "PlantDepot", "SeedMasters", "ToolTown"};
+            String[] notes = {
+                "Planted in spring for best results",
+                "Keep soil moist and well-drained",
+                "Fertilize every two weeks"
+            };
+            for (int h = 0; h < 4; h++) {
+                int historyId = 20000000 + j * 10 + h;
+                int amount = 5 + rand.nextInt(20);
+                String location = locations[rand.nextInt(locations.length)];
+                String provider = providers[rand.nextInt(providers.length)];
+                String deliveryDate = sdf.format(new java.util.Date(System.currentTimeMillis() - rand.nextInt(1000 * 60 * 60 * 24 * 365)));
+                String note = notes[h % notes.length] + " (" + gardeningItems[j] + ")";
+                PreparedStatement psHist = con.prepareStatement(
+                    "INSERT INTO history (history_id, item_id, amount, location, provider, delivery_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                );
+                psHist.setInt(1, historyId);
+                psHist.setInt(2, itemId);
+                psHist.setInt(3, amount);
+                psHist.setString(4, location);
+                psHist.setString(5, provider);
+                psHist.setString(6, deliveryDate);
+                psHist.setString(7, note);
+                psHist.executeUpdate();
+                psHist.close();
+            }
+        }
+    }
     // Update a history record in the database and in-memory model
     public void updateHistoryTransintoDatabase(Connection con, ArrayList<Company> Company, int companyIndex, int itemIndex, int historyIndex, String name, String location, String supplier, String delivery, int quantity) throws SQLException {
         // Update in-memory model
@@ -57,46 +173,41 @@ public final class Databases {
         this.con = con;
         this.Company = Company;
         try {
-            // Check if company table exists and has data
-            PreparedStatement checkCompany = con.prepareStatement("SELECT COUNT(*) FROM company");
-            ResultSet rsCompany = checkCompany.executeQuery();
-            int companyCount = 0;
-            if (rsCompany.next()) {
-                companyCount = rsCompany.getInt(1);
-            }
-            if (companyCount == 0) {
-                return false; // No data, need to generate test data
-            }
-
-            // Load items
-            ArrayList<Item> items = new ArrayList<>();
-            PreparedStatement statement = con.prepareStatement("SELECT * FROM ITEM");
-            ResultSet itemsResult = statement.executeQuery();
-            while (itemsResult.next()) {
-                int itemId = itemsResult.getInt(1);
-                int companyId = itemsResult.getInt(2);
-                int quantity = itemsResult.getInt(3);
-                String itemName = itemsResult.getString(4);
-                String itemNotes = null;
-                try { itemNotes = itemsResult.getString("notes"); } catch (Exception e) { itemNotes = null; }
-
-                // Load history for this item
-                ArrayList<history> historyList = new ArrayList<>();
-                PreparedStatement histStmt = con.prepareStatement("SELECT * FROM HISTORY WHERE item_id = ?");
-                histStmt.setInt(1, itemId);
-                ResultSet histResult = histStmt.executeQuery();
-                while (histResult.next()) {
-                    int historyId = histResult.getInt(1);
-                    int amount = histResult.getInt(3);
-                    String location = histResult.getString(4);
-                    String provider = histResult.getString(5);
-                    String deliveryDate = histResult.getString(6);
-                    String historyNotes = null;
-                    try { historyNotes = histResult.getString("notes"); } catch (Exception e) { historyNotes = null; }
-                    historyList.add(new history(historyId, itemId, amount, location, provider, deliveryDate, historyNotes));
+            // Drop tables if they exist
+            String[] dropTables = {
+                "DROP TABLE IF EXISTS history",
+                "DROP TABLE IF EXISTS item",
+                "DROP TABLE IF EXISTS users",
+                "DROP TABLE IF EXISTS company"
+            };
+            for (String sql : dropTables) {
+                try {
+                    PreparedStatement stmt = con.prepareStatement(sql);
+                    stmt.executeUpdate();
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-                items.add(new Item(itemId, companyId, quantity, itemName, itemNotes, historyList));
             }
+
+            // Create tables
+            String createCompany = "CREATE TABLE company (Company_ID INT NOT NULL, Company_title CHAR(25) NULL, company_name VARCHAR(255) NULL, PRIMARY KEY(Company_ID)) ENGINE = InnoDB;";
+            String createUsers = "CREATE TABLE users (User_ID INT NOT NULL, User_Name CHAR(25) NULL, User_Password CHAR(25) NOT NULL, Company_ID INT NOT NULL, PRIMARY KEY(User_ID)) ENGINE = InnoDB;";
+            String createItem = "CREATE TABLE item (Item_ID INT NOT NULL AUTO_INCREMENT, Company_ID INT NOT NULL, quantity INT NULL, item_name CHAR(25) NULL, Location CHAR(25) NULL, Notes VARCHAR(200) NULL, PRIMARY KEY(Item_ID,Company_ID)) ENGINE = InnoDB;";
+            String createHistory = "CREATE TABLE history (history_id INT NOT NULL AUTO_INCREMENT, item_ID INT NOT NULL, amount INT NULL, location CHAR(25) NULL, provider CHAR(25) NULL, delivery_date CHAR(25) NULL, notes VARCHAR(200) NULL, PRIMARY KEY(history_id)) ENGINE = InnoDB;";
+            String[] createTables = {createCompany, createUsers, createItem, createHistory};
+            for (String sql : createTables) {
+                try {
+                    PreparedStatement stmt = con.prepareStatement(sql);
+                    stmt.executeUpdate();
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Now repopulate with test data
+            resetAndPopulateGardeningTestData(con);
 
             // Load users
             ArrayList<User> users = new ArrayList<>();
@@ -106,13 +217,43 @@ public final class Databases {
                 users.add(new User(userResult.getInt(1), userResult.getInt(4), userResult.getString(2), userResult.getString(3)));
             }
 
-            // Load companies
+            // Load companies and their items
             PreparedStatement companyStmt = con.prepareStatement("SELECT * FROM company");
             ResultSet companyResult = companyStmt.executeQuery();
             while (companyResult.next()) {
                 int companyId = companyResult.getInt(1);
-                String companyName = companyResult.getString(2);
-                Company.add(new Company(companyId, companyName, items, users));
+                String companyName = companyResult.getString("company_name");
+
+                // Load items for this company
+                ArrayList<Item> companyItems = new ArrayList<>();
+                PreparedStatement itemStmt = con.prepareStatement("SELECT * FROM item WHERE Company_ID = ?");
+                itemStmt.setInt(1, companyId);
+                ResultSet itemsResult = itemStmt.executeQuery();
+                while (itemsResult.next()) {
+                    int itemId = itemsResult.getInt(1);
+                    int quantity = itemsResult.getInt(3);
+                    String itemName = itemsResult.getString("item_name");
+                    String itemNotes = null;
+                    try { itemNotes = itemsResult.getString("notes"); } catch (Exception e) { itemNotes = null; }
+
+                    // Load history for this item
+                    ArrayList<history> historyList = new ArrayList<>();
+                    PreparedStatement histStmt = con.prepareStatement("SELECT * FROM HISTORY WHERE item_id = ?");
+                    histStmt.setInt(1, itemId);
+                    ResultSet histResult = histStmt.executeQuery();
+                    while (histResult.next()) {
+                        int historyId = histResult.getInt(1);
+                        int amount = histResult.getInt(3);
+                        String location = histResult.getString(4);
+                        String provider = histResult.getString(5);
+                        String deliveryDate = histResult.getString(6);
+                        String historyNotes = null;
+                        try { historyNotes = histResult.getString("notes"); } catch (Exception e) { historyNotes = null; }
+                        historyList.add(new history(historyId, itemId, amount, location, provider, deliveryDate, historyNotes));
+                    }
+                    companyItems.add(new Item(itemId, companyId, quantity, itemName, itemNotes, historyList));
+                }
+                Company.add(new Company(companyId, companyName, companyItems, users));
             }
             return true;
         } catch (SQLException sqlex) {

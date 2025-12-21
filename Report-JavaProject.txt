@@ -1,21 +1,60 @@
-DateFri Dec 19 23:53:35 GMT 2025
-Company Name: Green Thumb Ltd	Company Id: 1001
+DateSun Dec 21 00:08:50 GMT 2025
+Company Name: Kanturk-Services	Company Id: 44008177
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Tomato Seeds			 3001			250
+Shovel			 44020000			54
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Seed delivery			 4001		100		  WireMakers		 2025-03-10
-			 Planted in greenhouse			 4002		50		  Green Thumb Ltd		 2025-03-15
+			 Compost Area			 21000000		9		  PlantDepot		 2025-12-17
+			 Compost Area			 21000001		16		  PlantDepot		 2025-12-18
+			 Garden Shed			 21000002		10		  GardenWorld		 2025-12-20
+			 Garden Shed			 21000003		15		  GardenWorld		 2025-12-09
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Garden Shovel			 3002			100
+Rake			 44020001			64
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Tool shipment			 4003		40		  PipeWorks		 2025-04-01
-			 Issued to staff			 4004		10		  Green Thumb Ltd		 2025-04-05
+			 Garden Shed			 21000010		15		  SeedMasters		 2025-12-17
+			 Garden Shed			 21000011		12		  SeedMasters		 2025-12-20
+			 Garden Shed			 21000012		20		  PlantDepot		 2025-12-20
+			 Compost Area			 21000013		23		  PlantDepot		 2025-12-19
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Rose Bush			 3003			75
+Lawn Mower			 44020002			52
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Received from nursery			 4005		25		  WireMakers		 2025-05-10
-			 Planted in flower bed			 4006		10		  Green Thumb Ltd		 2025-05-12
+			 Garden Shed			 21000020		8		  ToolTown		 2025-12-12
+			 Compost Area			 21000021		24		  PlantDepot		 2025-12-09
+			 Nursery			 21000022		22		  SeedMasters		 2025-12-11
+			 Compost Area			 21000023		19		  SeedMasters		 2025-12-18
 Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
-Compost Bag			 3004			40
+Hose			 44020003			14
 			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
-			 Compost delivery			 4007		40		  PipeWorks		 2025-06-01
+			 Greenhouse			 21000030		21		  ToolTown		 2025-12-18
+			 Garden Shed			 21000031		16		  GardenWorld		 2025-12-06
+			 Garden Shed			 21000032		15		  GardenWorld		 2025-12-07
+			 Nursery			 21000033		14		  ToolTown		 2025-12-16
+DateSun Dec 21 00:08:50 GMT 2025
+Company Name: GreenThumb Supplies	Company Id: 77008177
+Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
+Compost Bin			 44010000			35
+			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
+			 Nursery			 20000000		7		  PlantDepot		 2025-12-05
+			 Nursery			 20000001		6		  SeedMasters		 2025-12-17
+			 Compost Area			 20000002		23		  ToolTown		 2025-12-10
+			 Compost Area			 20000003		20		  PlantDepot		 2025-12-14
+Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
+Garden Hoe			 44010001			27
+			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
+			 Greenhouse			 20000010		20		  GardenWorld		 2025-12-14
+			 Garden Shed			 20000011		22		  PlantDepot		 2025-12-04
+			 Compost Area			 20000012		21		  PlantDepot		 2025-12-17
+			 Greenhouse			 20000013		19		  ToolTown		 2025-12-07
+Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
+Tomato Seeds			 44010002			12
+			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
+			 Nursery			 20000020		21		  PlantDepot		 2025-12-13
+			 Greenhouse			 20000021		15		  SeedMasters		 2025-12-06
+			 Compost Area			 20000022		6		  SeedMasters		 2025-12-14
+			 Garden Shed			 20000023		20		  SeedMasters		 2025-12-06
+Item Name: 			Item Id: 		 Item Quantity: 		Item Location: 
+Watering Can			 44010003			50
+			History Location: 			HistoryId:  		 Amount: 		Supplier: 		Delivery Date: 
+			 Greenhouse			 20000030		13		  SeedMasters		 2025-12-09
+			 Garden Shed			 20000031		22		  ToolTown		 2025-12-16
+			 Greenhouse			 20000032		6		  GardenWorld		 2025-12-15
+			 Nursery			 20000033		8		  GardenWorld		 2025-12-04

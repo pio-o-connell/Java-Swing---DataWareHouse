@@ -31,41 +31,51 @@ public class maindriver{
 
 	
 	public static void main(String[] args) throws Exception{
-				
+		// Show progress dialog while initializing database
+		javax.swing.JDialog progressDialog = new javax.swing.JDialog((JFrame)null, "Please wait", true);
+		javax.swing.JLabel label = new javax.swing.JLabel("Initializing database...", javax.swing.SwingConstants.CENTER);
+		progressDialog.getContentPane().add(label);
+		progressDialog.setSize(300, 100);
+		progressDialog.setLocationRelativeTo(null);
+		progressDialog.setDefaultCloseOperation(javax.swing.JDialog.DO_NOTHING_ON_CLOSE);
 
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC","root","ROOT");
-		
+		// Run DB init in a background thread
+		new Thread(() -> {
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/warehouse?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC","root","ROOT");
 
-		Databases db = new Databases(con);
-		// Try to load database into memory, if not present, generate test data
-        boolean dbLoaded = db.init(con, Company);
-        if (!dbLoaded) {
-            db.setup(con, Company);
-        }
+				Databases db = new Databases(con);
+				// Try to load database into memory, if not present, generate test data
+				boolean dbLoaded = db.init(con, Company);
+				if (!dbLoaded) {
+					db.setup(con, Company);
+				}
 
+				String dateString1 = "2002-03-03";
+				String dateString2 = "2012-03-10";
 
-		String dateString1 = "2002-03-03";
-	    String dateString2 = "2012-03-10";
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-	    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				Date dateFrom = format.parse(dateString1);
+				Date dateTo = format.parse(dateString2);
 
-	    Date dateFrom = format.parse(dateString1);
-	    Date dateTo = format.parse(dateString2);	
-       
-       
-		GenerateReport report= new GenerateReport(Company);
-		report.GenerateItemsDatesReport(dateFrom, dateTo);
-		
-		
-	
+				GenerateReport report= new GenerateReport(Company);
+				report.GenerateItemsDatesReport(dateFrom, dateTo);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				progressDialog.setVisible(false);
+				progressDialog.dispose();
+			}
+		}).start();
+
+		// Show the dialog (blocks until disposed)
+		progressDialog.setVisible(true);
+
+		// Now launch the main window
 		SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
-				// LOGIN DISABLED FOR TESTING/DEBUGGING
-				// String user = JOptionPane.showInputDialog(null,"User"); // dialog requests username
-				// String password = JOptionPane.showInputDialog(null,"Password"); // dialog requests password
-				// if ("root".equals(user) && "ROOT".equals(password)){
-				//     JOptionPane.showMessageDialog(null,"login okay");
 				JFrame frame;
 				try {
 					frame = new Mainframe("Warehouse Inventory System");
@@ -76,17 +86,9 @@ public class maindriver{
 					frame.pack();
 					frame.setVisible(true);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} // main window is created
-				// }
-				// else
-				// {
-				//     JOptionPane.showMessageDialog(null,"login not okay");    
-				// }
+				}
 			}
 		});
-
-
-}
+	}
 }
