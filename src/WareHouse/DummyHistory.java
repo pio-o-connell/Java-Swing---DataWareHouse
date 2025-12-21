@@ -1,3 +1,4 @@
+// DummyHistory.java has been deleted.
 package WareHouse;
 
 
